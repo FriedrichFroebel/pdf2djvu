@@ -39,9 +39,9 @@ jobs:
           cc: clang
     runs-on: ${{matrix.os}}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: set up ccache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.ccache
         key: ccache-${{matrix.os}}-${{matrix.cc || 'gcc'}}-${{matrix.poppler}}-${{matrix.exiv2}}
@@ -82,7 +82,7 @@ jobs:
         echo CXX=$CXX >> $GITHUB_ENV
     - name: download and unpack Poppler source tarball
       run: |
-        wget https://poppler.freedesktop.org/${{matrix.poppler}}.tar.xz
+        wget https://poppler.freedesktop.org/${{ matrix.poppler }}.tar.xz
         tar -xvvf poppler-*.tar.*
       if: matrix.poppler != 'poppler-git'
     - name: clone Poppler git repo
@@ -112,7 +112,7 @@ jobs:
         rm -rf poppler-*
     - name: download and unpack poppler-data source tarball
       run: |
-        wget https://poppler.freedesktop.org/${{matrix.poppler-data}}.tar.gz
+        wget https://poppler.freedesktop.org/${{ matrix.poppler-data }}.tar.gz
         tar -xvvf poppler-data-*.tar.*
       if: matrix.poppler-data != 'poppler-data-git'
     - name: clone poppler-data git repo
@@ -128,7 +128,7 @@ jobs:
         rm -rf poppler-data-*
     - name: download and unpack Exiv2 source tarball
       run: |
-        v=${{matrix.exiv2}}
+        v=${{ matrix.exiv2 }}
         v=${v#exiv2-}
         case $v in
           0.2[0-6]) s='';;
@@ -174,21 +174,19 @@ jobs:
       run:
         ./pdf2djvu --version
     - name: set up Python
-      run: |
-        sudo apt-get install python2
-        sudo ln -sf python2 /usr/bin/python
-        python --version
-      if: matrix.os != 'ubuntu-18.04'
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - name: update PIP
+      run:
+        python -m pip install --upgrade pip
+    - name: install wheel
+      run:
+        python -m pip install --upgrade wheel
+    # TODO: Drop `numpy` and `nose-py3`
     - name: install Python deps
-      run: |
-        sudo apt-get install python-nose python-pil
-      if: matrix.os != 'ubuntu-22.04'
-    - name: install Python deps
-      run: |
-        sudo apt-get install python-pip
-        python -m pip install nose
-        python -m pip install Pillow
-      if: matrix.os == 'ubuntu-22.04'
+      run:
+        python -m pip install --upgrade numpy nose-py3==1.4.0 Pillow
     - name: run tests
       run: |
         make -C tests prepare
@@ -219,12 +217,11 @@ jobs:
         make -C doc check
       if: matrix.docs
   cppcheck:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: set up APT
-      run: |
-        printf 'Apt::Install-Recommends "false";\n' | sudo tee -a /etc/apt/apt.conf
+      run:
         sudo apt-get update
     - name: install cppcheck
       run:
@@ -233,31 +230,20 @@ jobs:
       run:
         private/cppcheck
   Python:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: set up Python 2.7
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v3
+    - name: set up Python
+      uses: actions/setup-python@v4
       with:
-        python-version: 2.7
-    - name: run pydiatra
-      run: |
-        python -m pip install pydiatra
-        cd tests
-        python -m pydiatra -v .
-    - name: run pyflakes
-      run: |
-        python -m pip install pyflakes
-        cd tests
-        python -m pyflakes .
-    - name: pip install deps
-      run: |
-        python -m pip install nose
-        python -m pip install Pillow
-    - name: run pylint
-      run: |
-        python -m pip install 'lazy-object-proxy<1.7.0' pylint
-        cd tests
-        python -m pylint *.py
+        python-version: '3.11'
+    - name: install flake8
+      run:
+        python -m pip install flake8 pep8-naming
+    # TODO: Enable.
+    #- name: run flake8
+      #run:
+        #cd tests
+        #python -m flake8 .
 
 # vim:ts=2 sts=2 sw=2 et

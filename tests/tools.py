@@ -42,9 +42,6 @@ from nose.tools import (
     assert_true,
 )
 
-if {0} and not isinstance(b'', str):  # Python 2.7 is required
-    raise RuntimeError('Python 2.7 is required')
-
 re_type = type(re.compile(''))
 
 def assert_fail(msg):
