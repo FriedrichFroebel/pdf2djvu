@@ -183,10 +183,10 @@ jobs:
     - name: install wheel
       run:
         python -m pip install --upgrade wheel
-    # TODO: Drop `numpy` and `nose-py3`
+    # TODO: Drop everything except `Pillow`
     - name: install Python deps
       run:
-        python -m pip install --upgrade numpy nose-py3==1.4.0 Pillow
+        python -m pip install --upgrade numpy six nose-py3==1.4.0 Pillow
     - name: run tests
       run: |
         make -C tests prepare
