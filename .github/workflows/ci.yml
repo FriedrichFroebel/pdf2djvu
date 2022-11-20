@@ -7,10 +7,6 @@ jobs:
     strategy:
       matrix:
         include:
-        - poppler: poppler-0.62.0 # Ubuntu 18.04 LTS "Bionic Beaver"; oldest supported release
-          poppler-data: poppler-data-0.4.8
-          exiv2: exiv2-0.21
-          os: ubuntu-18.04
         - poppler: poppler-0.71.0 # Debian 10 "Buster"
           poppler-data: poppler-data-0.4.9
           exiv2: exiv2-0.25
