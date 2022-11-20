@@ -275,8 +275,8 @@ def rainbow(width, height):
     from PIL import ImageColor
     image = Image.new('RGB', (width, height))
     pixels = image.load()
-    for x in xrange(width):
-        for y in xrange(height):
+    for x in range(width):
+        for y in range(height):
             hue = 255 * x // (width - 1)
             luminance = 100 * y // height
             color = ImageColor.getrgb('hsl({hue}, 100%, {lum}%)'.format(hue=hue, lum=luminance))
@@ -287,8 +287,8 @@ def checkboard(width, height):
     from PIL import Image
     image = Image.new('1', (width, height))
     pixels = image.load()
-    for x in xrange(width):
-        for y in xrange(height):
+    for x in range(width):
+        for y in range(height):
             color = 0xFF * ((x ^ y) & 1)
             pixels[x, y] = color
     return image
