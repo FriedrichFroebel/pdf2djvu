@@ -85,9 +85,10 @@ jobs:
         wget https://poppler.freedesktop.org/${{ matrix.poppler }}.tar.xz
         tar -xvvf poppler-*.tar.*
       if: matrix.poppler != 'poppler-git'
-    - name: clone Poppler git repo
-      run:
-        git clone https://anongit.freedesktop.org/git/poppler/poppler.git poppler-git
+    - name: download Poppler git repo
+      run: |
+        wget https://gitlab.freedesktop.org/poppler/poppler/-/archive/master/poppler-master.tar.gz -O poppler-master.tar.gz
+        tar -xvvf poppler-master.tar.gz
       if: matrix.poppler == 'poppler-git'
     - name: configure Poppler
       run: |
@@ -115,9 +116,10 @@ jobs:
         wget https://poppler.freedesktop.org/${{ matrix.poppler-data }}.tar.gz
         tar -xvvf poppler-data-*.tar.*
       if: matrix.poppler-data != 'poppler-data-git'
-    - name: clone poppler-data git repo
-      run:
-        git clone https://anongit.freedesktop.org/git/poppler/poppler-data.git poppler-data-git
+    - name: download poppler-data git repo
+      run: |
+        wget https://gitlab.freedesktop.org/poppler/poppler-data/-/archive/master/poppler-data-master.tar.gz -O poppler-data-master.tar.gz
+        tar -xvvf poppler-data-master.tar.gz
       if: matrix.poppler-data == 'poppler-data-git'
     - name: install poppler-data
       run: |
@@ -137,9 +139,10 @@ jobs:
         wget "https://github.com/Exiv2/exiv2/releases/download/v${v}/exiv2-${v}${s}.tar.gz"
         tar -xvvf exiv2-*.tar.*
       if: matrix.exiv2 != 'exiv2-git'
-    - name: clone Exiv2 git repo
+    - name: download and unpack Exiv2 git
       run: |
-        git clone https://github.com/Exiv2/exiv2 exiv2-git
+        wget https://github.com/Exiv2/exiv2/archive/refs/heads/main.tar.gz -O exiv2-main.tar.gz
+        tar -xvvf exiv2-main.tar.gz
       if: matrix.exiv2 == 'exiv2-git'
     - name: configure Exiv2
       run: |
