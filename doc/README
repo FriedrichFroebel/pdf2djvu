@@ -80,13 +80,11 @@ Differences from upstream
    http://www.graphicsmagick.org/
 .. _OpenMP:
    https://www.openmp.org/
-.. _nose:
-   https://nose.readthedocs.io/
 .. _poppler-data:
    https://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz
-.. _Issue #157
+.. _Issue #157:
    https://github.com/jwilk-archive/pdf2djvu/issues/157
-.. _Issue #141
+.. _Issue #141:
    https://github.com/jwilk-archive/pdf2djvu/issues/141
 
 .. vim:ft=rst ts=3 sts=3 sw=3 et tw=72
