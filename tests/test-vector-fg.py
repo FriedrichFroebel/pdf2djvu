@@ -30,6 +30,6 @@ class test(case):
         image = self.decode()
         image = self.decode(mode='foreground')
         colors = count_colors(image)
-        assert_greater(colors.get('\xFF\0\0', 0), 5000)
+        assert_greater(colors.get(b'\xFF\0\0', 0), 5000)
 
 # vim:ts=4 sts=4 sw=4 et

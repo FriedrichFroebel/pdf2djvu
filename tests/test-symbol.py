@@ -45,7 +45,7 @@ class test(case):
         image = self.decode(fmt='pgm')
         print_pgm(image)
         for line in image:
-            sig = str.join('', (pixel for (pixel, _) in itertools.groupby(line)))
+            sig = str.join('', (chr(pixel) for (pixel, _) in itertools.groupby(line)))
             if sig not in {'\xFF', '\xFF\x00\xFF', '\xFF\x00\xFF\x00\xFF'}:
                 assert_fail('image does not look like uppercase delta')
 

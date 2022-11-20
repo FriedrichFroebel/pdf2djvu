@@ -27,7 +27,7 @@ class test(case):
         r.assert_(stdout=re.compile(
             r'\n'
             r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=\uFFFDnul\uFFFDl\uFFFD\n'
-            r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=1\n'.encode('UTF-8')
+            r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=1\n'
         ))
 
 # vim:ts=4 sts=4 sw=4 et
