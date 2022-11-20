@@ -13,8 +13,6 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-from __future__ import print_function
-
 import ast
 import codecs
 import collections
@@ -66,7 +64,7 @@ def _get_signal_names():
             del data['SIGCLD']
     except KeyError:
         pass
-    return {no: name for name, no in data.iteritems()}
+    return {no: name for name, no in data.items()}
 
 class _ipc_rc(int):
 
@@ -161,7 +159,8 @@ class case(object):
                 continue
             raise TypeError('{key!r} is an invalid keyword argument for this function'.format(key=key))
         env['LANGUAGE'] = 'en'
-        print('$', str.join(' ', map(pipes.quote, commandline)))
+        cmd_array = [x if isinstance(x, str) else x.decode('UTF-8', 'surrogateescape') for x in commandline]
+        print('$', str.join(' ', map(pipes.quote, cmd_array)))
         try:
             child = ipc.Popen(list(commandline),
                 stdout=ipc.PIPE,
@@ -172,7 +171,7 @@ class case(object):
             exc.filename = commandline[0]
             raise
         stdout, stderr = child.communicate()
-        return ipc_result(stdout, stderr, child.returncode)
+        return ipc_result(stdout.decode('UTF-8', 'surrogateescape'), stderr.decode('UTF-8', 'surrogateescape'), child.returncode)
 
     def _pdf2djvu(self, *args, **kwargs):
         quiet = ('-q',) if kwargs.pop('quiet', True) else ()
@@ -301,7 +300,7 @@ def _read_ppm(b):
     (width, height, pixels) = match.groups()
     width = int(width)
     height = int(height)
-    pixels = memoryview(pixels)
+    pixels = memoryview(pixels.encode('UTF-8', 'surrogateescape'))
     pixels = [
         [
             pixels[(i + j):(i + j + 3)].tobytes()
@@ -328,7 +327,7 @@ def _read_pgm(b):
     (width, height, pixels) = match.groups()
     width = int(width)
     height = int(height)
-    pixels = memoryview(pixels)
+    pixels = memoryview(pixels.encode('UTF-8', 'surrogateescape'))
     pixels = [
         pixels[i:(i + width)]
         for i in range(0, len(pixels), width)

@@ -23,9 +23,9 @@ class test(case):
     # + fixed in 0.4.9 [8af81b21de1d8c43bb7585b5318938cde52e30a2]
     # + fixed in 0.4.11 [670a11dc9680cb4dac088d269f08f16f8ec0da7c]
 
-    text = u'¾'
+    text = '¾'
     text_nfkc = '3⁄4'
-    text_no_nfkc = text.encode('UTF-8')
+    text_no_nfkc = text
 
     def test_nfkc(self):
         self.pdf2djvu().assert_()

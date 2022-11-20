@@ -56,12 +56,12 @@ class test(case):
 
     def test_bad_encoding(self):
         self.require_feature('POSIX')
-        template = '{page}\xBA'
+        template = b'{page}\xBA'
         r = self.pdf2djvu('--page-title-template', template, encoding='UTF-8')
         r.assert_(stderr=re.compile('^Unable to convert page title to UTF-8:'), rc=1)
 
     def test_iso8859_1(self):
-        template = '{page}\xBA'
+        template = b'{page}\xBA'
         self.pdf2djvu('--page-title-template', template, encoding='ISO8859-1').assert_()
         r = self.ls()
         r.assert_(stdout=re.compile(

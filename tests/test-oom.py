@@ -41,7 +41,7 @@ def vm_limit(limit):
     try:
         r = case().run(sys.executable, '-c', code)
         r.assert_(stdout=re.compile(''))
-        (cld_soft_lim, cld_hard_lim) = map(int, r.stdout.splitlines())
+        (cld_soft_lim, cld_hard_lim) = list(map(int, r.stdout.splitlines()))
         if cld_soft_lim != limit or cld_hard_lim != lim_hard:
             message = 'virtual memory limit did not propagate to subprocess'
             if sys.platform.rstrip(string.digits) == 'gnu':

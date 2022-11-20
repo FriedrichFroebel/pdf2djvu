@@ -29,7 +29,7 @@ class test(case):
     def test_nonascii(self):
         locale_encoding = locale.getpreferredencoding()
         try:
-            curr_sign = u'\xA4'.encode(locale_encoding)
+            curr_sign = '\xA4'
         except UnicodeError:
             raise SkipTest('locale that can encode U+00A4 CURRENCY SIGN is required')
         tmpdir = tempfile.mkdtemp(prefix='pdf2djvu.test.')

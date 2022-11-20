@@ -24,9 +24,9 @@ class test(case):
     # Bug: https://github.com/jwilk/pdf2djvu/issues/90
     # + fixed in 0.8
 
-    text = u'\N{LATIN SMALL LIGATURE FL}uorogra\N{LATIN SMALL LIGATURE FI}a'
-    text_nfkc = unicodedata.normalize('NFKC', text).encode('UTF-8')
-    text_no_nfkc = text.encode('UTF-8')
+    text = '\N{LATIN SMALL LIGATURE FL}uorogra\N{LATIN SMALL LIGATURE FI}a'
+    text_nfkc = unicodedata.normalize('NFKC', text)
+    text_no_nfkc = text
 
     def test_nfkc(self):
         self.pdf2djvu().assert_()
