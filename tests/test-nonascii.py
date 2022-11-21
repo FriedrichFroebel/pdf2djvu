@@ -13,25 +13,23 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-import locale
 import os
 import shutil
 import tempfile
 
-from tools import (
-    case,
-    SkipTest,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/138
+
+class NonAsciiTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/138
+    """
 
     def test_nonascii(self):
-        locale_encoding = locale.getpreferredencoding()
         try:
             curr_sign = '\xA4'
         except UnicodeError:
-            raise SkipTest('locale that can encode U+00A4 CURRENCY SIGN is required')
+            raise self.SkipTest('locale that can encode U+00A4 CURRENCY SIGN is required')
         tmpdir = tempfile.mkdtemp(prefix='pdf2djvu.test.')
         try:
             djvu_path = os.path.join(tmpdir, curr_sign + '.djvu')
@@ -42,8 +40,8 @@ class test(case):
                 pdf_path,
                 '-o', djvu_path
             ))
-            r = self.run(*cmdline)
-            r.assert_()
+            r = self.run_command(*cmdline)
+            r.check_result(testcase_object=self)
         finally:
             shutil.rmtree(tmpdir)
 

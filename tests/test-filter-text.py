@@ -15,15 +15,14 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
+
+class FilterTextTestCase(TestCase):
     def test_rot13(self):
         self.require_feature('POSIX')
-        self.pdf2djvu('--filter-text', 'tr "a-zA-Z" "n-za-mN-ZA-M"').assert_()
+        self.pdf2djvu('--filter-text', 'tr "a-zA-Z" "n-za-mN-ZA-M"').check_result(testcase_object=self)
         r = self.print_text()
-        r.assert_(stdout=re.compile('^Yberz vcfhz *\n'))
+        r.check_result(testcase_object=self, stdout=re.compile('^Yberz vcfhz *\n'))
 
 # vim:ts=4 sts=4 sw=4 et

@@ -15,16 +15,17 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # + fixed in 0.3.6 [79779eea4fccc83d126ba27408de16a1c5f35d11]
+
+class SolidNonWhiteBackgroundTestCase(TestCase):
+    """
+    Fixed in 0.3.6 [79779eea4fccc83d126ba27408de16a1c5f35d11]
+    """
 
     def test(self):
-        self.pdf2djvu().assert_()
+        self.pdf2djvu().check_result(testcase_object=self)
         r = self.djvudump()
-        r.assert_(stdout=re.compile(r'BG44 \[[0-9][0-9]\] .* 75x75'))
+        r.check_result(testcase_object=self, stdout=re.compile(r'BG44 \[[0-9][0-9]\] .* 75x75'))
 
 # vim:ts=4 sts=4 sw=4 et

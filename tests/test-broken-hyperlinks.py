@@ -15,56 +15,56 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
 
-    def t(self, page, message, empty_stdout=True):
+class BrokenHyperlinksTestCase(TestCase):
+
+    def check(self, page, message, empty_stdout=True):
         r = self.pdf2djvu('-p', str(page), quiet=False)
         kwargs = dict(
-            stderr=re.compile('- Warning: {warn}\n'.format(warn=re.escape(message)))
+            stderr=re.compile(f'- Warning: {re.escape(message)}\n')
         )
         if not empty_stdout:
             kwargs.update(
                 stdout=re.compile('')
             )
-        r.assert_(**kwargs)
+        r.check_result(testcase_object=self, **kwargs)
 
     def test_no_action(self):
-        self.t(1, 'Unable to convert link without an action')
+        self.check(1, 'Unable to convert link without an action')
 
     def test_lookup_error(self):
-        self.t(2, 'Cannot find link destination',
+        self.check(
+            2, 'Cannot find link destination',
             empty_stdout=False  # https://bugs.freedesktop.org/show_bug.cgi?id=81513
         )
 
     def test_remote_goto_action(self):
-        self.t(3, 'Unable to convert link with a remote go-to action')
+        self.check(3, 'Unable to convert link with a remote go-to action')
 
     def test_named_action(self):
-        self.t(4, 'Unable to convert link with a named action')
+        self.check(4, 'Unable to convert link with a named action')
 
     def test_launch_action(self):
-        self.t(5, 'Unable to convert link with a launch action')
+        self.check(5, 'Unable to convert link with a launch action')
 
     def test_movie_action(self):
-        self.t(6, 'Unable to convert link with a multimedia action')
+        self.check(6, 'Unable to convert link with a multimedia action')
 
     def test_sound_action(self):
-        self.t(7, 'Unable to convert link with a multimedia action')
+        self.check(7, 'Unable to convert link with a multimedia action')
 
     def test_rendition_action(self):
-        self.t(8, 'Unable to convert link with a multimedia action')
+        self.check(8, 'Unable to convert link with a multimedia action')
 
     def test_js_action(self):
-        self.t(9, 'Unable to convert link with a JavaScript action')
+        self.check(9, 'Unable to convert link with a JavaScript action')
 
     def test_set_ocg_state_action(self):
-        self.t(10, 'Unable to convert link with a set-OCG-state action')
+        self.check(10, 'Unable to convert link with a set-OCG-state action')
 
     def test_unknown_action(self):
-        self.t(11, 'Unknown link action')
+        self.check(11, 'Unknown link action')
 
 # vim:ts=4 sts=4 sw=4 et

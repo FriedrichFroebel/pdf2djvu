@@ -16,26 +16,27 @@
 import re
 import unicodedata
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/90
-    # + fixed in 0.8
+
+class NfkcApfTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/90
+    Fixed in 0.8.
+    """
 
     text = '\N{LATIN SMALL LIGATURE FL}uorogra\N{LATIN SMALL LIGATURE FI}a'
     text_nfkc = unicodedata.normalize('NFKC', text)
     text_no_nfkc = text
 
     def test_nfkc(self):
-        self.pdf2djvu().assert_()
+        self.pdf2djvu().check_result(testcase_object=self)
         r = self.print_text()
-        r.assert_(stdout=re.compile('^{s} *$'.format(s=self.text_nfkc), re.M))
+        r.check_result(testcase_object=self, stdout=re.compile(f'^{self.text_nfkc} *$', re.M))
 
     def test_no_nfkc(self):
-        self.pdf2djvu('--no-nfkc').assert_()
+        self.pdf2djvu('--no-nfkc').check_result(testcase_object=self)
         r = self.print_text()
-        r.assert_(stdout=re.compile('^{s} *$'.format(s=self.text_nfkc), re.M))
+        r.check_result(testcase_object=self, stdout=re.compile(f'^{self.text_nfkc} *$', re.M))
 
 # vim:ts=4 sts=4 sw=4 et

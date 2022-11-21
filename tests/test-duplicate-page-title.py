@@ -15,23 +15,27 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
 
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/113
-    # + fixed in 0.9.5 [1b262b90854cd3d5359cd7fdf6b72642b54c8f60]
+class DuplicatePageTitleTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/113
+    Fixed in 0.9.5 [1b262b90854cd3d5359cd7fdf6b72642b54c8f60]
+    """
+
     def test(self):
         r = self.pdf2djvu('--page-title-template', '{label}', quiet=False)
-        r.assert_(stderr=re.compile('Warning: Ignoring duplicate page title: x\n'))
+        r.check_result(testcase_object=self, stderr=re.compile('Warning: Ignoring duplicate page title: x\n'))
         r = self.ls()
-        r.assert_(stdout=re.compile(
-            r'\n'
-            r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=x\n'
-            r'\s*2\s+P\s+\d+\s+[\w.]+\n'
-            r'\s*3\s+P\s+\d+\s+[\w.]+\n'
-        ))
+        r.check_result(
+            testcase_object=self,
+            stdout=re.compile(
+                r'\n'
+                r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=x\n'
+                r'\s*2\s+P\s+\d+\s+[\w.]+\n'
+                r'\s*3\s+P\s+\d+\s+[\w.]+\n'
+            )
+        )
 
 # vim:ts=4 sts=4 sw=4 et

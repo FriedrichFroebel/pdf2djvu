@@ -35,8 +35,7 @@ ifeq "$(origin pdf2djvu)" "file"
 all: $(pdf2djvu)
 endif
 all: $(generated_files)
-	# $(PYTHON) -m unittest discover --start-directory .
-	$(PYTHON) -c 'import nose; nose.main()' -v $(noseargs)
+	$(PYTHON) -m unittest discover --start-directory .
 
 .PHONY: prepare
 prepare: $(generated_files)

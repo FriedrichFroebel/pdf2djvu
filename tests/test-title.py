@@ -15,59 +15,71 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
+
+class TitleTestCase(TestCase):
 
     def test_no_title(self):
-        def t(*args):
-            self.pdf2djvu(*args).assert_()
+        def check(*args):
+            self.pdf2djvu(*args).check_result(testcase_object=self)
             r = self.ls()
-            r.assert_(stdout=re.compile(
-                r'\n'
-                r'\s*1\s+P\s+\d+\s+[\w.]+\n'
-                r'\s*2\s+P\s+\d+\s+[\w.]+\n'
-            ))
-        t('--page-title-template', '')
-        t('--no-page-titles')
+            r.check_result(
+                testcase_object=self,
+                stdout=re.compile(
+                    r'\n'
+                    r'\s*1\s+P\s+\d+\s+[\w.]+\n'
+                    r'\s*2\s+P\s+\d+\s+[\w.]+\n'
+                )
+            )
+
+        check('--page-title-template', '')
+        check('--no-page-titles')
 
     def test_ascii(self):
         template = '#{page}'
-        self.pdf2djvu('--page-title-template', template).assert_()
+        self.pdf2djvu('--page-title-template', template).check_result(testcase_object=self)
         r = self.ls()
-        r.assert_(stdout=re.compile(
-            r'\n'
-            r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=#1\n'
-            r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=#2\n'
-        ))
+        r.check_result(
+            testcase_object=self,
+            stdout=re.compile(
+                r'\n'
+                r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=#1\n'
+                r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=#2\n'
+            )
+        )
 
     def test_utf8(self):
         self.require_feature('POSIX')
         template = '№{page}'
-        self.pdf2djvu('--page-title-template', template, encoding='UTF-8').assert_()
+        self.pdf2djvu('--page-title-template', template, encoding='UTF-8').check_result(testcase_object=self)
         r = self.ls()
-        r.assert_(stdout=re.compile(
-            r'\n'
-            r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=№1\n'
-            r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=№2\n'
-        ))
+        r.check_result(
+            testcase_object=self,
+            stdout=re.compile(
+                r'\n'
+                r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=№1\n'
+                r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=№2\n'
+            )
+        )
 
     def test_bad_encoding(self):
         self.require_feature('POSIX')
         template = b'{page}\xBA'
         r = self.pdf2djvu('--page-title-template', template, encoding='UTF-8')
-        r.assert_(stderr=re.compile('^Unable to convert page title to UTF-8:'), rc=1)
+        r.check_result(testcase_object=self, stderr=re.compile('^Unable to convert page title to UTF-8:'), rc=1)
 
     def test_iso8859_1(self):
         template = b'{page}\xBA'
-        self.pdf2djvu('--page-title-template', template, encoding='ISO8859-1').assert_()
+        self.pdf2djvu('--page-title-template', template, encoding='ISO8859-1').check_result(testcase_object=self)
         r = self.ls()
-        r.assert_(stdout=re.compile(
-            r'\n'
-            r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=1º\n'
-            r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=2º\n'
-        ))
+        r.check_result(
+            testcase_object=self,
+            stdout=re.compile(
+                r'\n'
+                r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=1º\n'
+                r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=2º\n'
+            )
+        )
 
 # vim:ts=4 sts=4 sw=4 et

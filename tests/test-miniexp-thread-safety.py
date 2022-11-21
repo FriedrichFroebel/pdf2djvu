@@ -13,14 +13,15 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
+
+class MiniexpThreadSafetyTestCase(TestCase):
     def test(self):
-        # Bug: https://github.com/jwilk/pdf2djvu/issues/131
-        # + fixed in 0.9.10 [1359ec9def9173d33a5eaca19ab08ce11d2a1306]
-        self.pdf2djvu('--no-render', '--dpi=72', '-j', '8').assert_()
+        """
+        Bug: https://github.com/jwilk/pdf2djvu/issues/131
+        Fixed in 0.9.10 [1359ec9def9173d33a5eaca19ab08ce11d2a1306]
+        """
+        self.pdf2djvu('--no-render', '--dpi=72', '-j', '8').check_result(testcase_object=self)
 
 # vim:ts=4 sts=4 sw=4 et

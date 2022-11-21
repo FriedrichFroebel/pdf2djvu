@@ -13,11 +13,10 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-expected_outline_sexpr = '''\
+
+EXPECTED_OUTLINE_SEXPR = """\
 (bookmarks
  ("Lorem"
   "#p0001.djvu"
@@ -33,29 +32,32 @@ expected_outline_sexpr = '''\
    "#p0002.djvu" ) )
  ("velit"
   "#p0001.djvu" ) )
-'''
+"""
 
-class test(case):
+
+class OutlineTestCase(TestCase):
 
     def test_multi_page(self):
-        self.pdf2djvu().assert_()
-        self.print_outline().assert_(stdout=expected_outline_sexpr)
+        self.pdf2djvu().check_result(testcase_object=self)
+        self.print_outline().check_result(testcase_object=self, stdout=EXPECTED_OUTLINE_SEXPR)
 
     def test_single_page(self):
-        # Make sure that outline is preserved in single-page documents without
-        # shared annotation chunk.
-        self.pdf2djvu('-p1', '--no-metadata').assert_()
-        self.print_outline().assert_(stdout=expected_outline_sexpr)
+        """
+        Make sure that outline is preserved in single-page documents without shared annotation chunk.
+        """
+        self.pdf2djvu('-p1', '--no-metadata').check_result(testcase_object=self)
+        self.print_outline().check_result(testcase_object=self, stdout=EXPECTED_OUTLINE_SEXPR)
 
     def test_iff_corruption(self):
-        # Make sure that the NAVM chunk begins on an even byte.
-        #
-        # Bug: https://github.com/jwilk/pdf2djvu/issues/110
-        # + introduced in 0.7.20
-        # + fixed in 0.8.2 [cef7b917bf1cde70884d444a4187fcebeec10ba8]
-        #
+        """
+        Make sure that the NAVM chunk begins on an even byte.
+
+        Bug: https://github.com/jwilk/pdf2djvu/issues/110
+        Introduced in 0.7.20.
+        Fixed in 0.8.2 [cef7b917bf1cde70884d444a4187fcebeec10ba8]
+        """
         # This particular choice of options seems to trigger odd-sized DIRM chunk:
-        self.pdf2djvu('-p1', '--no-metadata', '--page-title-template', 'xx').assert_()
-        self.print_outline().assert_(stdout=expected_outline_sexpr)
+        self.pdf2djvu('-p1', '--no-metadata', '--page-title-template', 'xx').check_result(testcase_object=self)
+        self.print_outline().check_result(testcase_object=self, stdout=EXPECTED_OUTLINE_SEXPR)
 
 # vim:ts=4 sts=4 sw=4 et

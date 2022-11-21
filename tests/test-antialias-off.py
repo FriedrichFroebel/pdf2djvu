@@ -15,14 +15,13 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
+
+class AntialiasOffTestCase(TestCase):
     def test(self):
-        self.pdf2djvu().assert_()
+        self.pdf2djvu().check_result(testcase_object=self)
         r = self.djvudump()
-        r.assert_(stdout=re.compile(r'\A(\s+(?!BG)\S+.*\n)+\Z'))
+        r.check_result(testcase_object=self, stdout=re.compile(r'\A(\s+(?!BG)\S+.*\n)+\Z'))
 
 # vim:ts=4 sts=4 sw=4 et

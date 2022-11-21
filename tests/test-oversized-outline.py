@@ -15,14 +15,13 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
+
+class OversizedOutlineTestCase(TestCase):
 
     def test(self):
         r = self.pdf2djvu()
-        r.assert_(stderr=re.compile('Document outline too large\n'), rc=1)
+        r.check_result(testcase_object=self, stderr=re.compile('Document outline too large\n'), rc=1)
 
 # vim:ts=4 sts=4 sw=4 et

@@ -15,19 +15,21 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
+
+class LabelsNullTestCase(TestCase):
 
     def test(self):
-        self.pdf2djvu().assert_()
+        self.pdf2djvu().check_result(testcase_object=self)
         r = self.ls()
-        r.assert_(stdout=re.compile(
-            r'\n'
-            r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=\uFFFDnul\uFFFDl\uFFFD\n'
-            r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=1\n'
-        ))
+        r.check_result(
+            testcase_object=self,
+            stdout=re.compile(
+                r'\n'
+                r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=\uFFFDnul\uFFFDl\uFFFD\n'
+                r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=1\n'
+            )
+        )
 
 # vim:ts=4 sts=4 sw=4 et

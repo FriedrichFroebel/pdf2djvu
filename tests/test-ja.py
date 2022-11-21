@@ -15,13 +15,13 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
 
-    # Make sure poppler-data files can be loaded.
+class JaTestCase(TestCase):
+    """
+    Make sure poppler-data files can be loaded.
+    """
 
     # FIXME: This does not really work when testing under Wine:
     #
@@ -51,15 +51,15 @@ class test(case):
     # * Wine fonts are not present in the Windows system font directory (C:\Windows\Fonts).
     # * Fontconfig looks for system fonts only in that directory:
     #   https://gitlab.freedesktop.org/fontconfig/fontconfig/issues/32
-    # * Poppler doesn't seem to like using a PostScript font as fallback.
+    # * Poppler does not seem to like using a PostScript font as fallback.
     #
     # Work-around:
     #
     #   cp /usr/share/wine/fonts/system.ttf $WINEPREFIX/drive_c/windows/Fonts/
 
     def test(self):
-        self.pdf2djvu().assert_()
+        self.pdf2djvu().check_result(testcase_object=self)
         r = self.print_text()
-        r.assert_(stdout=re.compile(r'^!\s*\n'))
+        r.check_result(testcase_object=self, stdout=re.compile(r'^!\s*\n'))
 
 # vim:ts=4 sts=4 sw=4 et

@@ -13,15 +13,16 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/4
-    # + fixed in 0.4.10 [5227290f2bcf4916dff7c4e6be7ea1de559c9151]
+
+class RotatedPageTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/4
+    Fixed in 0.4.10 [5227290f2bcf4916dff7c4e6be7ea1de559c9151]
+    """
 
     def test(self):
-        self.pdf2djvu().assert_()
+        self.pdf2djvu().check_result(testcase_object=self)
 
 # vim:ts=4 sts=4 sw=4 et

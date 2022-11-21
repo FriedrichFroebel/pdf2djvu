@@ -15,14 +15,14 @@
 
 import re
 
-from tools import (
-    assert_equal,
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/98
-    # + fixed in 0.8 [ec2d2e6f7101f7693dac8d102c0dce1fa879f346]
+
+class OverwriteTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/98
+    Fixed in 0.8 [ec2d2e6f7101f7693dac8d102c0dce1fa879f346]
+    """
 
     def test_overwrite(self):
         pdf_path = self.get_pdf_path()
@@ -33,10 +33,10 @@ class test(case):
             self.get_pdf_path(),
             '-o', self.get_pdf_path()
         ))
-        r = self.run(*cmdline)
-        r.assert_(stderr=re.compile('Input file is the same as output file:'), rc=1)
+        r = self.run_command(*cmdline)
+        r.check_result(testcase_object=self, stderr=re.compile('Input file is the same as output file:'), rc=1)
         with open(pdf_path, 'rb') as pdf_file:
             pdf_after = pdf_file.read()
-        assert_equal(pdf_before, pdf_after)
+        self.assertEqual(pdf_before, pdf_after)
 
 # vim:ts=4 sts=4 sw=4 et

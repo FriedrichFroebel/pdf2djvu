@@ -15,22 +15,23 @@
 
 import re
 
-from tools import (
-    assert_regex,
-    case,
-)
+from tools import TestCase
 
-class test(case):
+
+class XmpBrokenTestCase(TestCase):
     def test_verbatim(self):
-        self.pdf2djvu('--verbatim-metadata').assert_()
+        self.pdf2djvu('--verbatim-metadata').check_result(testcase_object=self)
         xmp = self.extract_xmp()
-        assert_regex(xmp, '<broken')
+        self.assertRegex(xmp, '<broken')
 
     def test_no_verbatim(self):
         self.require_feature('Exiv2')
         r = self.pdf2djvu()
-        r.assert_(stderr=re.compile(r'\AXMP metadata error: XMP Toolkit error 201: .*\n\Z'))
+        r.check_result(
+            testcase_object=self,
+            stderr=re.compile(r'\AXMP metadata error: XMP Toolkit error 201: .*\n\Z')
+        )
         xmp = self.extract_xmp()
-        assert_regex(xmp, '<broken')
+        self.assertRegex(xmp, '<broken')
 
 # vim:ts=4 sts=4 sw=4 et

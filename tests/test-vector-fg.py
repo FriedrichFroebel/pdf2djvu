@@ -13,23 +13,22 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-from tools import (
-    case,
-    assert_greater,
-    count_colors,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/115
-    # + introduced in 0.7.1 [a9440040faf697bc11370e8012ba586e88e4dca4]
-    # + introduced in 0.7.10 [da7cd2524b329a80581b939037f4d42801f3755d]
-    # + fixed in 0.9.3 [93f9032d99b75145a03ce64de9c3ae3e25314541]
+
+class VectorForegroundTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/115
+    Introduced in 0.7.1 [a9440040faf697bc11370e8012ba586e88e4dca4]
+    Introduced in 0.7.10 [da7cd2524b329a80581b939037f4d42801f3755d]
+    Fixed in 0.9.3 [93f9032d99b75145a03ce64de9c3ae3e25314541]
+    """
 
     def test(self):
         self.pdf2djvu()
-        image = self.decode()
+        image = self.decode()  # noqa: F841
         image = self.decode(mode='foreground')
-        colors = count_colors(image)
-        assert_greater(colors.get(b'\xFF\0\0', 0), 5000)
+        colors = self.count_colors(image)
+        self.assertGreater(colors.get(b'\xFF\0\0', 0), 5000)
 
 # vim:ts=4 sts=4 sw=4 et

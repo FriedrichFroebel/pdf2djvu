@@ -16,6 +16,7 @@
 
 from tools import checkboard
 
+
 image = checkboard(8, 8)
 image.save('test-interpolation.png')
 

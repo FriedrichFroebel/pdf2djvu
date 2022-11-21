@@ -15,17 +15,18 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/59
-    # + fixed in 0.7.10 [da7cd2524b329a80581b939037f4d42801f3755d]
+
+class MonochromeTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/59
+    Fixed in 0.7.10 [da7cd2524b329a80581b939037f4d42801f3755d]
+    """
 
     def test(self):
-        self.pdf2djvu('--monochrome').assert_()
+        self.pdf2djvu('--monochrome').check_result(testcase_object=self)
         r = self.djvudump()
-        r.assert_(stdout=re.compile(r'Sjbz \[[0-9]{4,}\]'))
+        r.check_result(testcase_object=self, stdout=re.compile(r'Sjbz \[[0-9]{4,}\]'))
 
 # vim:ts=4 sts=4 sw=4 et

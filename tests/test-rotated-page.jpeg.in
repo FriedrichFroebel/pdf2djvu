@@ -16,6 +16,7 @@
 
 from tools import rainbow
 
+
 image = rainbow(255, 100)
 image.save('test-rotated-page.jpeg')
 

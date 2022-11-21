@@ -16,6 +16,7 @@
 
 from tools import rainbow
 
+
 image = rainbow(100, 101)
 image.save('test-subsample.jpeg')
 

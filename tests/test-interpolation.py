@@ -15,20 +15,20 @@
 
 import re
 
-from tools import (
-    SkipTest,
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://bugs.debian.org/760396
+
+class InterpolationTestCase(TestCase):
+    """
+    Bug: https://bugs.debian.org/760396
+    """
 
     def test(self):
-        self.pdf2djvu('--dpi=72').assert_()
+        self.pdf2djvu('--dpi=72').check_result(testcase_object=self)
         r = self.djvudump()
         try:
-            r.assert_(stdout=re.compile(r'\A(\s+(?!FG)\S+.*\n)+\Z'))
+            r.check_result(testcase_object=self, stdout=re.compile(r'\A(\s+(?!FG)\S+.*\n)+\Z'))
         except AssertionError:
-            raise SkipTest('https://bugs.freedesktop.org/show_bug.cgi?id=68360')
+            raise self.SkipTest('https://bugs.freedesktop.org/show_bug.cgi?id=68360')
 
 # vim:ts=4 sts=4 sw=4 et

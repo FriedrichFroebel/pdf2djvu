@@ -13,28 +13,26 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-b = 1000
-item_template = '''
+
+ITEM_COUNT = 1000
+ITEM_TEMPLATE = '''
   ("ipsum {0}"
    "#p0001.djvu" )
 '''.strip('\n')
-expected_outline_sexpr = ('''\
+EXPECTED_OUTLINE_SEXPR = ('''\
 (bookmarks
  ("Lorem"
   "#p0001.djvu"
-'''
-+ str.join('\n', (item_template.format(i) for i in range(0, b)))
-+ ' ) )\n'
+''' + '\n'.join(ITEM_TEMPLATE.format(i) for i in range(0, ITEM_COUNT)) + ' ) )\n'
 )
 
-class test(case):
+
+class BigOutlineTestCase(TestCase):
 
     def test_multi_page(self):
-        self.pdf2djvu().assert_()
-        self.print_outline().assert_(stdout=expected_outline_sexpr)
+        self.pdf2djvu().check_result(testcase_object=self)
+        self.print_outline().check_result(testcase_object=self, stdout=EXPECTED_OUTLINE_SEXPR)
 
 # vim:ts=4 sts=4 sw=4 et

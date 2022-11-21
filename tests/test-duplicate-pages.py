@@ -15,26 +15,26 @@
 
 import re
 
-from tools import (
-    assert_not_equal,
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/23
-    # + fixed in 0.5.5 [ad11da594a254f203f603fd4105fb05c8b508c64]
 
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/73
-    # + fixed in 0.8 [5d5fa0e235497aa7e82ea2ba5fcfd3351ae53562]
+class DuplicatePagesTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/23
+    Fixed in 0.5.5 [ad11da594a254f203f603fd4105fb05c8b508c64]
+
+    Bug: https://github.com/jwilk/pdf2djvu/issues/73
+    Fixed in 0.8 [5d5fa0e235497aa7e82ea2ba5fcfd3351ae53562]
+    """
 
     def test_bundled(self):
         r = self.pdf2djvu('--pages=1,1')
-        r.assert_(stderr=re.compile('^Duplicate page:', re.M), rc=None)
-        assert_not_equal(r.rc, 0)
+        r.check_result(testcase_object=self, stderr=re.compile('^Duplicate page:', re.M), rc=None)
+        self.assertNotEqual(r.rc, 0)
 
     def test_indirect(self):
         r = self.pdf2djvu_indirect('--pages=1,1')
-        r.assert_(stderr=re.compile('^Duplicate page:', re.M), rc=None)
-        assert_not_equal(r.rc, 0)
+        r.check_result(testcase_object=self, stderr=re.compile('^Duplicate page:', re.M), rc=None)
+        self.assertNotEqual(r.rc, 0)
 
 # vim:ts=4 sts=4 sw=4 et

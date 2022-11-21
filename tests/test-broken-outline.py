@@ -15,18 +15,19 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
 
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/112
-    # + fixed in 0.9.2 [74a8915ca7602adfd0e71c7d329de2265eec4532]
+class BrokenOutlineTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/112
+    Fixed in 0.9.2 [74a8915ca7602adfd0e71c7d329de2265eec4532]
+    """
 
     def test(self):
         r = self.pdf2djvu()
-        r.assert_(
+        r.check_result(
+            testcase_object=self,
             stderr=re.compile(''),
             stdout=re.compile(''),  # https://bugs.freedesktop.org/show_bug.cgi?id=81513
         )

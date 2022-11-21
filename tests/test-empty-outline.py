@@ -13,16 +13,17 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://bugs.debian.org/508391
-    # + fixed in 0.4.12 [608c126d78edff453158de122edeb69645f9b027]
+
+class EmptyOutlineTestCase(TestCase):
+    """
+    Bug: https://bugs.debian.org/508391
+    Fixed in 0.4.12 [608c126d78edff453158de122edeb69645f9b027]
+    """
 
     def test(self):
-        self.pdf2djvu().assert_()
-        self.print_outline().assert_()
+        self.pdf2djvu().check_result(testcase_object=self)
+        self.print_outline().check_result(testcase_object=self)
 
 # vim:ts=4 sts=4 sw=4 et

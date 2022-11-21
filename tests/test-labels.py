@@ -15,51 +15,59 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
 
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/109
-    # + fixed in 0.9 [39920569549418038f1ffcefe65e3ddf78adacd2]
+class LabelsTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/109
+    Fixed in 0.9 [39920569549418038f1ffcefe65e3ddf78adacd2]
+    """
 
     def test(self):
-        def t(*args):
-            self.pdf2djvu(*args).assert_()
+        def check(*args):
+            self.pdf2djvu(*args).check_result(testcase_object=self)
             r = self.ls()
-            r.assert_(stdout=re.compile(
-                r'\n'
-                r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=one\n'
-                r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=Αʹ\n'
-                r'\s*3\s+P\s+\d+\s+[\w.]+\s+T=i\n'
-                r'\s*4\s+P\s+\d+\s+[\w.]+\s+T=1\n'
-            ))
-        t()
-        t('--page-title-template', '{label}')
+            r.check_result(
+                testcase_object=self,
+                stdout=re.compile(
+                    r'\n'
+                    r'\s*1\s+P\s+\d+\s+[\w.]+\s+T=one\n'
+                    r'\s*2\s+P\s+\d+\s+[\w.]+\s+T=Αʹ\n'
+                    r'\s*3\s+P\s+\d+\s+[\w.]+\s+T=i\n'
+                    r'\s*4\s+P\s+\d+\s+[\w.]+\s+T=1\n'
+                )
+            )
+
+        check()
+        check('--page-title-template', '{label}')
 
     def test_arithmetic(self):
-        def t(offset):
+        def check(offset):
             r = self.pdf2djvu('--page-title-template', '{label' + offset + '}')
-            r.assert_(
+            r.check_result(
+                testcase_object=self,
                 stderr='Unable to format field {label}: type error: expected number, not string\n',
                 rc=1
             )
-        t('+1')
-        t('-1')
+        check('+1')
+        check('-1')
 
     def test_auto_width(self):
         r = self.pdf2djvu('--page-title-template', '{label:0*}')
-        r.assert_(
+        r.check_result(
+            testcase_object=self,
             stderr='Unable to format field {label}: unknown maximum width\n',
             rc=1
         )
 
     def test_page_id(self):
-        # {label} can be used in --page-title-template,
-        # but not it --page-id-template
+        """
+        {label} can be used in --page-title-template, but not in --page-id-template.
+        """
         r = self.pdf2djvu('--page-id-template', '{label}')
-        r.assert_(
+        r.check_result(
+            testcase_object=self,
             stderr='Unable to format field {label}: no such variable\n',
             rc=1
         )

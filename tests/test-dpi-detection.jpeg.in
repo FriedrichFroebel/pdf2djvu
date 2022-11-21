@@ -16,6 +16,7 @@
 
 from tools import rainbow
 
+
 image = rainbow(100, 100)
 image.save('test-dpi-detection.jpeg')
 

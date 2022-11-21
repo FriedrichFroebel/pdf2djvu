@@ -15,14 +15,13 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
+
+class DpiDetectionTestCase(TestCase):
     def test(self):
-        self.pdf2djvu('--guess-dpi').assert_()
+        self.pdf2djvu('--guess-dpi').check_result(testcase_object=self)
         r = self.djvudump()
-        r.assert_(stdout=re.compile('INFO .* DjVu 100x200,'))
+        r.check_result(testcase_object=self, stdout=re.compile('INFO .* DjVu 100x200,'))
 
 # vim:ts=4 sts=4 sw=4 et

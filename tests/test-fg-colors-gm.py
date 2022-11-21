@@ -15,62 +15,69 @@
 
 import re
 
-from tools import (
-    assert_equal,
-    assert_in,
-    case,
-    count_colors,
-)
+from tools import TestCase
 
-class test(case):
+
+class ForegroundColorsGraphicsMagickTestCase(TestCase):
 
     def test(self):
-        # Bug: https://github.com/jwilk/pdf2djvu/issues/47
-        # + fixed in 0.7.2 [a10cfc8ac94e8f3b7e01e089056bf6a371d1a68d]
-        def t(i, n):
+        """
+        Bug: https://github.com/jwilk/pdf2djvu/issues/47
+        Fixed in 0.7.2 [a10cfc8ac94e8f3b7e01e089056bf6a371d1a68d]
+        """
+        def check(i, n):
             self.require_feature('GraphicsMagick')
             self.pdf2djvu(
                 '--dpi=72',
-                '--fg-colors={0}'.format(i)
-            ).assert_()
-            image = self.decode()
+                f'--fg-colors={i}'
+            ).check_result(testcase_object=self)
+            image = self.decode()  # noqa: F841
             image = self.decode(mode='foreground')
-            colors = count_colors(image)
+            colors = self.count_colors(image)
             if isinstance(n, tuple):
-                assert_in(len(colors), n)
+                self.assertIn(len(colors), n)
             else:
-                assert_equal(len(colors), n)
-        yield t, 1, 2
-        yield t, 2, 3
-        yield t, 4, 5
-        yield t, 255, 241
-        yield t, 256, (245, 256)
-        yield t, 652, (245, 325)
+                self.assertEqual(len(colors), n)
+
+        for foreground_colors, expected_color_count in [
+                (1, 2),
+                (2, 3),
+                (4, 5),
+                (255, 241),
+                (256, (245, 256)),
+                (652, (245, 325))
+        ]:
+            with self.subTest(foreground_colors=foreground_colors):
+                check(foreground_colors, expected_color_count)
 
     def test_range_error(self):
-        def t(i):
+        def check(i):
             self.require_feature('GraphicsMagick')
-            r = self.pdf2djvu('--fg-colors={0}'.format(i))
+            r = self.pdf2djvu(f'--fg-colors={i}')
             msg = 'The specified number of foreground colors is outside the allowed range: 1 .. 4080'
-            r.assert_(
+            r.check_result(
+                testcase_object=self,
                 stderr=re.compile('^' + re.escape(msg) + '\n'),
                 rc=1,
             )
-        t('-1')
-        t(0)
-        t(4081)
+
+        check('-1')
+        check(0)
+        check(4081)
 
     def test_bad_number(self):
-        def t(i):
+        def check(i):
             self.require_feature('GraphicsMagick')
-            r = self.pdf2djvu('--fg-colors={0}'.format(i))
-            r.assert_(
+            r = self.pdf2djvu(f'--fg-colors={i}')
+            r.check_result(
+                testcase_object=self,
                 stderr=re.compile('^"{0}" is not a valid number\n'.format(i)),
                 rc=1,
             )
-        t('')
-        t('1x')
-        t('0x1')
-        t(23 ** 17)
+
+        check('')
+        check('1x')
+        check('0x1')
+        check(23 ** 17)
 
 # vim:ts=4 sts=4 sw=4 et

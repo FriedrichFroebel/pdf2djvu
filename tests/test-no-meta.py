@@ -13,15 +13,16 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # + fixed in 0.7.10 [b888a6035c600bb12855685389c488b35e4c868e]
+
+class NoMetaTestCase(TestCase):
+    """
+    Fixed in 0.7.10 [b888a6035c600bb12855685389c488b35e4c868e]
+    """
 
     def test(self):
-        self.pdf2djvu('--no-metadata', '--dpi=72').assert_()
-        self.print_meta().assert_()
+        self.pdf2djvu('--no-metadata', '--dpi=72').check_result(testcase_object=self)
+        self.print_meta().check_result(testcase_object=self)
 
 # vim:ts=4 sts=4 sw=4 et

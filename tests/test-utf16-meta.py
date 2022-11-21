@@ -15,20 +15,24 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # + fixed in 0.3.3 [0d4169e1bdffb34ebcef51f29abc744ade9c1556]
+
+class Utf16MetaTestCase(TestCase):
+    """
+    Fixed in 0.3.3 [0d4169e1bdffb34ebcef51f29abc744ade9c1556]
+    """
 
     def test(self):
         title = (
             r'\316\232\317\211\316\264\316\271\316\272\316\277\317\200\316\277\316\257\316\267\317\203\316\267 '
             r'\317\207\316\261\317\201\316\261\316\272\317\204\316\256\317\201\317\211\316\275'
         )
-        self.pdf2djvu('--dpi=72').assert_()
+        self.pdf2djvu('--dpi=72').check_result(testcase_object=self)
         r = self.print_meta()
-        r.assert_(stdout=re.compile('Title\t"{s}"'.format(s=title.replace('\\', '\\\\'))))
+        r.check_result(
+            testcase_object=self,
+            stdout=re.compile('Title\t"{s}"'.format(s=title.replace('\\', '\\\\')))
+        )
 
 # vim:ts=4 sts=4 sw=4 et

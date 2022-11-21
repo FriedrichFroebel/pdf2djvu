@@ -13,14 +13,10 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-from __future__ import print_function
-
 import itertools
 
-from tools import (
-    assert_fail,
-    case,
-)
+from tools import TestCase
+
 
 def print_pgm(image):
     width = len(image[0])
@@ -37,8 +33,11 @@ def print_pgm(image):
         print('|')
     print('+', '-' * (2 * width), '+', sep='')
 
-class test(case):
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/154
+
+class SymbolTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/154
+    """
 
     def test(self):
         self.pdf2djvu('--dpi=150')
@@ -47,6 +46,6 @@ class test(case):
         for line in image:
             sig = str.join('', (chr(pixel) for (pixel, _) in itertools.groupby(line)))
             if sig not in {'\xFF', '\xFF\x00\xFF', '\xFF\x00\xFF\x00\xFF'}:
-                assert_fail('image does not look like uppercase delta')
+                self.fail('image does not look like uppercase delta')
 
 # vim:ts=4 sts=4 sw=4 et

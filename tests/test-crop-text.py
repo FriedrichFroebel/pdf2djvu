@@ -15,22 +15,23 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/20
-    # + fixed in 0.5.4 [46b70e11778f984c2db302a1c8a18bc0996a387c]
+
+class CropTextTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/20
+    Fixed in 0.5.4 [46b70e11778f984c2db302a1c8a18bc0996a387c]
+    """
 
     def test_no_crop(self):
-        self.pdf2djvu().assert_()
+        self.pdf2djvu().check_result(testcase_object=self)
         r = self.print_text()
-        r.assert_(stdout=re.compile('^Lorem ipsum *\n'))
+        r.check_result(testcase_object=self, stdout=re.compile('^Lorem ipsum *\n'))
 
     def test_crop(self):
-        self.pdf2djvu('--crop-text').assert_()
+        self.pdf2djvu('--crop-text').check_result(testcase_object=self)
         r = self.print_text()
-        r.assert_(stdout=re.compile('^Lorem *\n'))
+        r.check_result(testcase_object=self, stdout=re.compile('^Lorem *\n'))
 
 # vim:ts=4 sts=4 sw=4 et

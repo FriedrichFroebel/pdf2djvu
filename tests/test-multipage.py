@@ -15,17 +15,18 @@
 
 import re
 
-from tools import (
-    case,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/50
-    # + fixed in 0.7.4 [1c373918e0152d452c24936818591d32df0ff7fc]
+
+class MultipageTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/50
+    Fixed in 0.7.4 [1c373918e0152d452c24936818591d32df0ff7fc]
+    """
 
     def test(self):
-        self.pdf2djvu('--pages=2').assert_()
+        self.pdf2djvu('--pages=2').check_result(testcase_object=self)
         r = self.print_text()
-        r.assert_(stdout=re.compile('^ipsum *\n'))
+        r.check_result(testcase_object=self, stdout=re.compile('^ipsum *\n'))
 
 # vim:ts=4 sts=4 sw=4 et

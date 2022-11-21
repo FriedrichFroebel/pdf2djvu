@@ -13,38 +13,35 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 # General Public License for more details.
 
-import xml.etree.cElementTree as etree
+from xml.etree import ElementTree
 
-from tools import (
-    assert_equal,
-    assert_not_equal,
-    assert_uuid_urn,
-    case,
-    xml_find_text,
-)
+from tools import TestCase
 
-class test(case):
-    # Bug: https://github.com/jwilk/pdf2djvu/issues/12
-    # + fixed in 0.6.0 [1368c73c027d798bdbfe0ac61c26339206e747bc]
+
+class XmpMediatypeTestCase(TestCase):
+    """
+    Bug: https://github.com/jwilk/pdf2djvu/issues/12
+    Fixed in 0.6.0 [1368c73c027d798bdbfe0ac61c26339206e747bc]
+    """
 
     def test_verbatim(self):
-        self.pdf2djvu('--verbatim-metadata').assert_()
+        self.pdf2djvu('--verbatim-metadata').check_result(testcase_object=self)
         xmp = self.extract_xmp()
-        xmp = etree.fromstring(xmp)
-        dcformat = xml_find_text(xmp, 'dc:format')
-        assert_equal(dcformat, 'application/pdf')
+        xmp = ElementTree.fromstring(xmp)
+        dc_format = self.xml_find_text(xmp, 'dc:format')
+        self.assertEqual(dc_format, 'application/pdf')
 
     def test_no_verbatim(self):
         self.require_feature('Exiv2')
-        self.pdf2djvu().assert_()
+        self.pdf2djvu().check_result(testcase_object=self)
         xmp = self.extract_xmp()
-        xmp = etree.fromstring(xmp)
-        dcformat = xml_find_text(xmp, 'dc:format')
-        assert_equal(dcformat, 'image/vnd.djvu')
-        instance_id = xml_find_text(xmp, 'xmpMM:InstanceID')
-        document_id = xml_find_text(xmp, 'xmpMM:DocumentID')
-        assert_not_equal(instance_id, document_id)
-        assert_uuid_urn(instance_id)
-        assert_uuid_urn(document_id)
+        xmp = ElementTree.fromstring(xmp)
+        dc_format = self.xml_find_text(xmp, 'dc:format')
+        self.assertEqual(dc_format, 'image/vnd.djvu')
+        instance_id = self.xml_find_text(xmp, 'xmpMM:InstanceID')
+        document_id = self.xml_find_text(xmp, 'xmpMM:DocumentID')
+        self.assertNotEqual(instance_id, document_id)
+        self.assert_uuid_urn(instance_id)
+        self.assert_uuid_urn(document_id)
 
 # vim:ts=4 sts=4 sw=4 et
