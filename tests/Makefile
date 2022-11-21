@@ -35,7 +35,7 @@ ifeq "$(origin pdf2djvu)" "file"
 all: $(pdf2djvu)
 endif
 all: $(generated_files)
-	$(PYTHON) -m unittest discover --start-directory .
+	$(PYTHON) -m unittest discover --verbose --start-directory .
 
 .PHONY: prepare
 prepare: $(generated_files)
