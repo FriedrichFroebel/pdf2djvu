@@ -14,14 +14,14 @@
 srcdir = ..
 include $(srcdir)/autoconf.mk
 
-PYTHON = python
+PYTHON = python3
 
 export pdf2djvu = ../pdf2djvu$(EXEEXT)
 
-test_scripts = $(wildcard test-*.py)
+test_scripts = $(wildcard test_*.py)
 tests = $(test_scripts:.py=)
 
-tex_files = $(wildcard test-*.tex)
+tex_files = $(wildcard test_*.tex)
 pdf_files = $(addsuffix .pdf,$(basename $(tex_files)))
 
 in_files = $(wildcard *.in)
@@ -35,7 +35,7 @@ ifeq "$(origin pdf2djvu)" "file"
 all: $(pdf2djvu)
 endif
 all: $(generated_files)
-	$(PYTHON) -c 'import nose; nose.main()' -v $(noseargs)
+	$(PYTHON) -m unittest discover --verbose --start-directory .
 
 .PHONY: prepare
 prepare: $(generated_files)

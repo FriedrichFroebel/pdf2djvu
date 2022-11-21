@@ -7,10 +7,6 @@ jobs:
     strategy:
       matrix:
         include:
-        - poppler: poppler-0.62.0 # Ubuntu 18.04 LTS "Bionic Beaver"; oldest supported release
-          poppler-data: poppler-data-0.4.8
-          exiv2: exiv2-0.21
-          os: ubuntu-18.04
         - poppler: poppler-0.71.0 # Debian 10 "Buster"
           poppler-data: poppler-data-0.4.9
           exiv2: exiv2-0.25
@@ -39,9 +35,9 @@ jobs:
           cc: clang
     runs-on: ${{matrix.os}}
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: set up ccache
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.ccache
         key: ccache-${{matrix.os}}-${{matrix.cc || 'gcc'}}-${{matrix.poppler}}-${{matrix.exiv2}}
@@ -82,12 +78,13 @@ jobs:
         echo CXX=$CXX >> $GITHUB_ENV
     - name: download and unpack Poppler source tarball
       run: |
-        wget https://poppler.freedesktop.org/${{matrix.poppler}}.tar.xz
+        wget https://poppler.freedesktop.org/${{ matrix.poppler }}.tar.xz
         tar -xvvf poppler-*.tar.*
       if: matrix.poppler != 'poppler-git'
-    - name: clone Poppler git repo
-      run:
-        git clone https://anongit.freedesktop.org/git/poppler/poppler.git poppler-git
+    - name: download Poppler git repo
+      run: |
+        wget https://gitlab.freedesktop.org/poppler/poppler/-/archive/master/poppler-master.tar.gz -O poppler-master.tar.gz
+        tar -xvvf poppler-master.tar.gz
       if: matrix.poppler == 'poppler-git'
     - name: configure Poppler
       run: |
@@ -112,12 +109,13 @@ jobs:
         rm -rf poppler-*
     - name: download and unpack poppler-data source tarball
       run: |
-        wget https://poppler.freedesktop.org/${{matrix.poppler-data}}.tar.gz
+        wget https://poppler.freedesktop.org/${{ matrix.poppler-data }}.tar.gz
         tar -xvvf poppler-data-*.tar.*
       if: matrix.poppler-data != 'poppler-data-git'
-    - name: clone poppler-data git repo
-      run:
-        git clone https://anongit.freedesktop.org/git/poppler/poppler-data.git poppler-data-git
+    - name: download poppler-data git repo
+      run: |
+        wget https://gitlab.freedesktop.org/poppler/poppler-data/-/archive/master/poppler-data-master.tar.gz -O poppler-data-master.tar.gz
+        tar -xvvf poppler-data-master.tar.gz
       if: matrix.poppler-data == 'poppler-data-git'
     - name: install poppler-data
       run: |
@@ -128,7 +126,7 @@ jobs:
         rm -rf poppler-data-*
     - name: download and unpack Exiv2 source tarball
       run: |
-        v=${{matrix.exiv2}}
+        v=${{ matrix.exiv2 }}
         v=${v#exiv2-}
         case $v in
           0.2[0-6]) s='';;
@@ -137,9 +135,10 @@ jobs:
         wget "https://github.com/Exiv2/exiv2/releases/download/v${v}/exiv2-${v}${s}.tar.gz"
         tar -xvvf exiv2-*.tar.*
       if: matrix.exiv2 != 'exiv2-git'
-    - name: clone Exiv2 git repo
+    - name: download and unpack Exiv2 git
       run: |
-        git clone https://github.com/Exiv2/exiv2 exiv2-git
+        wget https://github.com/Exiv2/exiv2/archive/refs/heads/main.tar.gz -O exiv2-main.tar.gz
+        tar -xvvf exiv2-main.tar.gz
       if: matrix.exiv2 == 'exiv2-git'
     - name: configure Exiv2
       run: |
@@ -174,21 +173,18 @@ jobs:
       run:
         ./pdf2djvu --version
     - name: set up Python
-      run: |
-        sudo apt-get install python2
-        sudo ln -sf python2 /usr/bin/python
-        python --version
-      if: matrix.os != 'ubuntu-18.04'
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - name: update PIP
+      run:
+        python -m pip install --upgrade pip
+    - name: install wheel
+      run:
+        python -m pip install --upgrade wheel
     - name: install Python deps
-      run: |
-        sudo apt-get install python-nose python-pil
-      if: matrix.os != 'ubuntu-22.04'
-    - name: install Python deps
-      run: |
-        sudo apt-get install python-pip
-        python -m pip install nose
-        python -m pip install Pillow
-      if: matrix.os == 'ubuntu-22.04'
+      run:
+        python -m pip install --upgrade Pillow
     - name: run tests
       run: |
         make -C tests prepare
@@ -219,12 +215,11 @@ jobs:
         make -C doc check
       if: matrix.docs
   cppcheck:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: set up APT
-      run: |
-        printf 'Apt::Install-Recommends "false";\n' | sudo tee -a /etc/apt/apt.conf
+      run:
         sudo apt-get update
     - name: install cppcheck
       run:
@@ -233,31 +228,19 @@ jobs:
       run:
         private/cppcheck
   Python:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: set up Python 2.7
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v3
+    - name: set up Python
+      uses: actions/setup-python@v4
       with:
-        python-version: 2.7
-    - name: run pydiatra
+        python-version: '3.11'
+    - name: install flake8
+      run:
+        python -m pip install flake8 pep8-naming
+    - name: run flake8
       run: |
-        python -m pip install pydiatra
         cd tests
-        python -m pydiatra -v .
-    - name: run pyflakes
-      run: |
-        python -m pip install pyflakes
-        cd tests
-        python -m pyflakes .
-    - name: pip install deps
-      run: |
-        python -m pip install nose
-        python -m pip install Pillow
-    - name: run pylint
-      run: |
-        python -m pip install 'lazy-object-proxy<1.7.0' pylint
-        cd tests
-        python -m pylint *.py
+        python -m flake8 .
 
 # vim:ts=2 sts=2 sw=2 et

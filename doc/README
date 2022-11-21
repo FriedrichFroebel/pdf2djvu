@@ -41,11 +41,28 @@ For the ``-j``/``--jobs`` option, the compiler must support OpenMP_.
 
 To run the tests, the following software is needed:
 
-* Python 2.7;
-* nose_.
+* Python 3.
 
 To correctly convert some PDF files (mostly in Chinese, Japanese or
 Korean), the poppler-data_ package must be installed.
+
+About this fork
+===============
+
+This repository ports the tests of the original repository to Python 3.
+
+The process involved the *2to3* tool and manual fixes afterwards to get the existing tests to pass.
+
+Due to the upstream repository having been archived (`Issue #157`_), there will be no pull request. Additionally, this never was considered as desirable by upstream, where the corresponding issue has been marked as *wontfix*: `Issue #141`_.
+
+Please note that I do not have any direct plans to actually do further work on *pdf2djvu* itself at the moment, as I am not actually using it myself. If someone wants to step on maintaining the actual C++ code, feel free to open a corresponding issue to further discuss this topic.
+
+Differences from upstream
+-------------------------
+
+* Tests require Python ≥ 3.6.
+* Migrate tests from *nose* to plain *unittest* stdlib module.
+* Conform tests to PEP8 coding style.
 
 .. ---------------------------------------------------------------------
 
@@ -63,9 +80,11 @@ Korean), the poppler-data_ package must be installed.
    http://www.graphicsmagick.org/
 .. _OpenMP:
    https://www.openmp.org/
-.. _nose:
-   https://nose.readthedocs.io/
 .. _poppler-data:
    https://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz
+.. _Issue #157:
+   https://github.com/jwilk-archive/pdf2djvu/issues/157
+.. _Issue #141:
+   https://github.com/jwilk-archive/pdf2djvu/issues/141
 
 .. vim:ft=rst ts=3 sts=3 sw=3 et tw=72
