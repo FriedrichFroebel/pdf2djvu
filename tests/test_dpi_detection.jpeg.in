@@ -18,6 +18,6 @@ from tools import rainbow
 
 
 image = rainbow(100, 100)
-image.save('test-dpi-detection.jpeg')
+image.save('test_dpi_detection.jpeg')
 
 # vim:ts=4 sts=4 sw=4 et
