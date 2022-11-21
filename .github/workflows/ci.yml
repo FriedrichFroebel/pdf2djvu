@@ -238,10 +238,9 @@ jobs:
     - name: install flake8
       run:
         python -m pip install flake8 pep8-naming
-    # TODO: Enable.
-    #- name: run flake8
-      #run:
-        #cd tests
-        #python -m flake8 .
+    - name: run flake8
+      run:
+        cd tests
+        python -m flake8 .
 
 # vim:ts=2 sts=2 sw=2 et

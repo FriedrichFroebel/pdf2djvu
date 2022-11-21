@@ -18,10 +18,10 @@ PYTHON = python3
 
 export pdf2djvu = ../pdf2djvu$(EXEEXT)
 
-test_scripts = $(wildcard test-*.py)
+test_scripts = $(wildcard test_*.py)
 tests = $(test_scripts:.py=)
 
-tex_files = $(wildcard test-*.tex)
+tex_files = $(wildcard test_*.tex)
 pdf_files = $(addsuffix .pdf,$(basename $(tex_files)))
 
 in_files = $(wildcard *.in)

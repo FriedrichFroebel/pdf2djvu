@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Fix the filenames for the tests directory to allow correct discovery through
+the stdlib `unittest` module. It requires the files to be named with valid
+Python identifiers, id est mostly using underscores instead of dashes (as used
+by the old version).
+
+Due to each test having another matching file (mostly TeX/PDF files), these
+have to be renamed as well.
+
+Reference: https://docs.python.org/3/library/unittest.html#test-discovery
+"""
+
+import glob
+import os
+
+
+DIRECTORY = './tests'
+
+
+def handle_path(path):
+    dir_name, base_name = os.path.split(path)
+    if '-' not in base_name:
+        return
+
+    if os.path.islink(path):
+        # Symbolic links.
+        # Before changing the linked target, we make sure to move it itself.
+        target = os.readlink(path)
+        if os.path.isabs(target):
+            handle_path(target)
+            _head, _tail = os.path.split(target)
+            target = os.path.join(_head, _tail.replace('-', '_'))
+        else:
+            handle_path(os.path.join(dir_name, target))
+            target = target.replace('-', '_')
+        print(f'Linking {path} to {target} ...')
+        # `os.symlink` will not attempt to overwrite existing links.
+        os.unlink(path)
+        os.symlink(src=target, dst=path)
+
+    # Symlinks itself have to be renamed as well.
+    target = os.path.join(dir_name, base_name.replace('-', '_'))
+    print(f'Moving {path} to {target} ...')
+    os.rename(src=path, dst=target)
+
+
+def main():
+    # Handle symbolic links first, as `os.path.islink(path)` will return
+    # `False` for missing link targets.
+    for path in glob.glob(f'{DIRECTORY}/*'):
+        if not os.path.isfile(path):
+            continue
+        if not os.path.islink(path):
+            continue
+        handle_path(path)
+
+    # Handle actual files.
+    for path in glob.glob(f'{DIRECTORY}/*'):
+        if not os.path.isfile(path):
+            continue
+        if os.path.islink(path):
+            continue
+        handle_path(path)
+
+
+if __name__ == '__main__':
+    main()
