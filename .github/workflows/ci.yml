@@ -239,7 +239,7 @@ jobs:
       run:
         python -m pip install flake8 pep8-naming
     - name: run flake8
-      run:
+      run: |
         cd tests
         python -m flake8 .
 
