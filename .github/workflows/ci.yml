@@ -62,6 +62,7 @@ jobs:
           libdjvulibre-dev
           libfontconfig1-dev
           libgraphicsmagick++1-dev
+          libinih-dev
           libopenjp2-7-dev
           libxml2-utils
           locales-all
