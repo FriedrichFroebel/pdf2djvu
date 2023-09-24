@@ -35,7 +35,7 @@ jobs:
           cc: clang
     runs-on: ${{matrix.os}}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: set up ccache
       uses: actions/cache@v3
       with:
@@ -218,7 +218,7 @@ jobs:
   cppcheck:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: set up APT
       run:
         sudo apt-get update
@@ -231,7 +231,7 @@ jobs:
   Python:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: set up Python
       uses: actions/setup-python@v4
       with:
