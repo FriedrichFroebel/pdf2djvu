@@ -7,25 +7,32 @@ jobs:
     strategy:
       matrix:
         include:
+        # https://packages.debian.org/search?searchon=sourcenames&keywords=poppler
+        # https://packages.debian.org/search?searchon=sourcenames&keywords=exiv2
         - poppler: poppler-0.71.0 # Debian 10 "Buster"
           poppler-data: poppler-data-0.4.9
           exiv2: exiv2-0.25
-          os: ubuntu-20.04
-        - poppler: poppler-0.86.1 # Ubuntu 20.04 LTS "Focal Fossa"
-          poppler-data: poppler-data-0.4.9
-          exiv2: exiv2-0.27.2
           os: ubuntu-20.04
         - poppler: poppler-20.09.0 # Debian 11 "Bullseye"
           poppler-data: poppler-data-0.4.10
           exiv2: exiv2-0.27.3
           os: ubuntu-20.04
+        - poppler: poppler-22.12.0 # Debian 12 "Bookworm"
+          poppler-data: poppler-data-0.4.12
+          exiv2: exiv2-0.27.6
+          os: ubuntu-20.04
+        # https://packages.ubuntu.com/
+        - poppler: poppler-0.86.1 # Ubuntu 20.04 LTS "Focal Fossa"
+          poppler-data: poppler-data-0.4.9
+          exiv2: exiv2-0.27.2
+          os: ubuntu-20.04
         - poppler: poppler-22.02.0 # Ubuntu 22.04 LTS "Jammy Jellyfish"
           poppler-data: poppler-data-0.4.11
           exiv2: exiv2-0.27.5
           os: ubuntu-22.04
-        - poppler: poppler-22.03.0 # newest tested release
-          poppler-data: poppler-data-0.4.11
-          exiv2: exiv2-0.27.5
+        - poppler: poppler-23.11.0 # newest tested release
+          poppler-data: poppler-data-0.4.12
+          exiv2: exiv2-0.28.0
           os: ubuntu-22.04
           docs: docs
         - poppler: poppler-git
@@ -176,7 +183,7 @@ jobs:
     - name: set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     - name: update PIP
       run:
         python -m pip install --upgrade pip
@@ -235,7 +242,7 @@ jobs:
     - name: set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'
+        python-version: '3.12'
     - name: install flake8
       run:
         python -m pip install flake8 pep8-naming
