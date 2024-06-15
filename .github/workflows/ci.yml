@@ -142,12 +142,7 @@ jobs:
       run: |
         v=${{ matrix.exiv2 }}
         v=${v#exiv2-}
-        case $v in
-          0.2[0-6]) s='';;
-          0.28.*) s='';;  # https://github.com/Exiv2/exiv2/issues/2821
-          *) s='-Source';;
-        esac
-        wget "https://github.com/Exiv2/exiv2/releases/download/v${v}/exiv2-${v}${s}.tar.gz"
+        wget "https://github.com/Exiv2/exiv2/archive/refs/tags/v${v}.tar.gz"
         tar -xvvf exiv2-*.tar.*
       if: matrix.exiv2 != 'exiv2-git'
     - name: download and unpack Exiv2 git
