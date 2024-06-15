@@ -142,7 +142,7 @@ jobs:
       run: |
         v=${{ matrix.exiv2 }}
         v=${v#exiv2-}
-        wget "https://github.com/Exiv2/exiv2/archive/refs/tags/v${v}.tar.gz"
+        wget -O "exiv2-v${v}.tar.gz" "https://github.com/Exiv2/exiv2/archive/refs/tags/v${v}.tar.gz"
         tar -xvvf exiv2-*.tar.*
       if: matrix.exiv2 != 'exiv2-git'
     - name: download and unpack Exiv2 git
