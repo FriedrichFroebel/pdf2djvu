@@ -113,8 +113,9 @@ jobs:
         echo PKG_CONFIG_PATH=~/.local/lib/pkgconfig/ >> $GITHUB_ENV
         echo LD_LIBRARY_PATH=~/.local/lib/ >> $GITHUB_ENV
         CXXFLAGS='-g -O2'
-        if grep -rwm1 std::optional .;
-        then
+        if grep -rwm1 std::string::starts_with .; then
+          CXXFLAGS+=' -std=gnu++20'
+        elif grep -rwm1 std::optional .; then
           CXXFLAGS+=' -std=gnu++17'
         fi
         echo "CXXFLAGS=$CXXFLAGS" | tee -a $GITHUB_ENV;
