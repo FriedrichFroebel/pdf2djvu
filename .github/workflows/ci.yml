@@ -153,10 +153,7 @@ jobs:
     - name: configure Exiv2
       run: |
         cd exiv2-*/
-        case ${{matrix.exiv2}} in
-          exiv2-0.2[0-6]) ./configure --prefix ~/.local --disable-static --without-zlib --disable-lensdata --disable-nls || cat config.log /fail;;
-          *) cmake . -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_INSTALL_PREFIX=~/.local -DCMAKE_VERBOSE_MAKEFILE=ON -DEXIV2_ENABLE_PNG=OFF -DEXIV2_ENABLE_NLS=OFF -DEXIV2_ENABLE_PRINTUCS2=OFF -DEXIV2_ENABLE_LENSDATA=OFF -DEXIV2_BUILD_EXIV2_COMMAND=OFF -DEXIV2_BUILD_SAMPLES=OFF;;
-        esac
+        cmake . -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_INSTALL_PREFIX=~/.local -DCMAKE_VERBOSE_MAKEFILE=ON -DEXIV2_ENABLE_PNG=OFF -DEXIV2_ENABLE_NLS=OFF -DEXIV2_ENABLE_PRINTUCS2=OFF -DEXIV2_ENABLE_LENSDATA=OFF -DEXIV2_BUILD_EXIV2_COMMAND=OFF -DEXIV2_BUILD_SAMPLES=OFF
     - name: build and install Exiv2
       run: |
         cd exiv2-*/
