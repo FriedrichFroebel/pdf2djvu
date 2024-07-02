@@ -11,10 +11,6 @@ jobs:
         include:
         # https://packages.debian.org/search?searchon=sourcenames&keywords=poppler
         # https://packages.debian.org/search?searchon=sourcenames&keywords=exiv2
-        - poppler: poppler-0.71.0  # Debian 10 "Buster"
-          poppler-data: poppler-data-0.4.9
-          exiv2: exiv2-0.25
-          os: ubuntu-20.04
         - poppler: poppler-20.09.0  # Debian 11 "Bullseye"
           poppler-data: poppler-data-0.4.10
           exiv2: exiv2-0.27.3
