@@ -529,6 +529,11 @@ public:
       debug(1) << _("Warning: Unable to convert link with a reset-form action") << std::endl;
       return;
 #endif
+#if POPPLER_VERSION >= 24100
+    case actionSubmitForm:
+      debug(1) << _("Warning: Unable to convert link with a submit-form action") << std::endl;
+      return;
+#endif
     case actionUnknown:
     default:
       debug(1) << _("Warning: Unknown link action") << std::endl;
