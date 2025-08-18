@@ -11,19 +11,15 @@ jobs:
         include:
         # https://packages.debian.org/search?searchon=sourcenames&keywords=poppler
         # https://packages.debian.org/search?searchon=sourcenames&keywords=exiv2
-        - poppler: poppler-20.09.0  # Debian 11 "Bullseye"
-          poppler-data: poppler-data-0.4.10
-          exiv2: exiv2-0.27.3
-          os: ubuntu-20.04
         - poppler: poppler-22.12.0  # Debian 12 "Bookworm"
           poppler-data: poppler-data-0.4.12
           exiv2: exiv2-0.27.6
-          os: ubuntu-20.04
+          os: ubuntu-22.04
+        - poppler: poppler-25.03.0  # Debian 13 "Trixie"
+          poppler-data: poppler-data-0.4.12
+          exiv2: exiv2-0.28.5
+          os: ubuntu-24.04
         # https://packages.ubuntu.com/
-        - poppler: poppler-0.86.1  # Ubuntu 20.04 LTS "Focal Fossa"
-          poppler-data: poppler-data-0.4.9
-          exiv2: exiv2-0.27.2
-          os: ubuntu-20.04
         - poppler: poppler-22.02.0  # Ubuntu 22.04 LTS "Jammy Jellyfish"
           poppler-data: poppler-data-0.4.11
           exiv2: exiv2-0.27.5
@@ -31,20 +27,20 @@ jobs:
         - poppler: poppler-24.02.0  # Ubuntu 24.04 LTS "Noble Numbat"
           poppler-data: poppler-data-0.4.12
           exiv2: exiv2-0.27.6
-          os: ubuntu-22.04
-        - poppler: poppler-24.06.1  # newest tested release
+          os: ubuntu-24.04
+        - poppler: poppler-25.08.0  # newest tested release
           poppler-data: poppler-data-0.4.12
-          exiv2: exiv2-0.28.2
-          os: ubuntu-22.04
+          exiv2: exiv2-0.28.5
+          os: ubuntu-latest
           docs: docs
         - poppler: poppler-git
           poppler-data: poppler-data-git
           exiv2: exiv2-git
-          os: ubuntu-22.04
+          os: ubuntu-latest
           cc: clang
     runs-on: ${{matrix.os}}
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: set up ccache
       uses: actions/cache@v4
       with:
@@ -221,7 +217,7 @@ jobs:
   cppcheck:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: set up APT
       run:
         sudo apt-get update
@@ -234,7 +230,7 @@ jobs:
   Python:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: set up Python
       uses: actions/setup-python@v5
       with:
