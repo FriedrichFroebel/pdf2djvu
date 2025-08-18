@@ -31,16 +31,16 @@ jobs:
         - poppler: poppler-24.02.0  # Ubuntu 24.04 LTS "Noble Numbat"
           poppler-data: poppler-data-0.4.12
           exiv2: exiv2-0.27.6
-          os: ubuntu-22.04
+          os: ubuntu-24.04
         - poppler: poppler-24.06.1  # newest tested release
           poppler-data: poppler-data-0.4.12
           exiv2: exiv2-0.28.2
-          os: ubuntu-22.04
+          os: ubuntu-latest
           docs: docs
         - poppler: poppler-git
           poppler-data: poppler-data-git
           exiv2: exiv2-git
-          os: ubuntu-22.04
+          os: ubuntu-latest
           cc: clang
     runs-on: ${{matrix.os}}
     steps:
