@@ -181,7 +181,11 @@ static bool annotations_callback(pdf::ant::Annotation *annotation, void *user_da
     border_colors.push_back("");
     return true;
   }
+#if POPPLER_VERSION > 250800
+  const double *values = color->getValues().data();
+#else
   const double *values = color->getValues();
+#endif
   switch (color->getSpace())
   {
   case pdf::ant::Color::colorTransparent:
