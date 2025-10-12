@@ -173,7 +173,7 @@ jobs:
       run:
         ./pdf2djvu --version
     - name: set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.14'
     - name: update PIP
@@ -232,7 +232,7 @@ jobs:
     steps:
     - uses: actions/checkout@v5
     - name: set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: '3.14'
     - name: install flake8
