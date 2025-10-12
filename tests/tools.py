@@ -19,8 +19,8 @@ import collections
 import inspect
 import locale
 import os
-import pipes
 import re
+import shlex
 import signal
 import subprocess as ipc
 import sys
@@ -158,7 +158,7 @@ class TestCase(_TestCase):
             raise TypeError(f'{key!r} is an invalid keyword argument for this function')
         env['LANGUAGE'] = 'en'
         cmd_array = [x if isinstance(x, str) else x.decode('UTF-8', 'surrogateescape') for x in commandline]
-        print('$', str.join(' ', map(pipes.quote, cmd_array)))
+        print('$', str.join(' ', map(shlex.quote, cmd_array)))
         try:
             child = ipc.Popen(
                 list(commandline),
