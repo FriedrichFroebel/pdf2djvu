@@ -1,5 +1,3 @@
-# encoding=UTF-8
-
 # Copyright © 2016-2022 Jakub Wilk <jwilk@jwilk.net>
 #
 # This file is part of pdf2djvu.

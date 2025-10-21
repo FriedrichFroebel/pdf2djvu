@@ -1,5 +1,3 @@
-# encoding=UTF-8
-
 # Copyright © 2010-2022 Jakub Wilk <jwilk@jwilk.net>
 #
 # This file is part of pdf2djvu.
@@ -71,7 +69,7 @@ class ForegroundColorsGraphicsMagickTestCase(TestCase):
             r = self.pdf2djvu(f'--fg-colors={i}')
             r.check_result(
                 testcase_object=self,
-                stderr=re.compile('^"{0}" is not a valid number\n'.format(i)),
+                stderr=re.compile(f'^"{i}" is not a valid number\n'),
                 rc=1,
             )
 
