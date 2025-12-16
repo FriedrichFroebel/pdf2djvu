@@ -503,7 +503,11 @@ bool pdf::get_glyph(splash::Splash *splash, splash::Font *font,
   if (font == nullptr)
     return false;
   splash::ClipResult clip_result;
+#if POPPLER_VERSION_NUMBER > 251200
+  if (!font->getGlyph(code, 0, 0, bitmap, static_cast<int>(x), static_cast<int>(y), splash->getClip().get(), &clip_result))
+#else
   if (!font->getGlyph(code, 0, 0, bitmap, static_cast<int>(x), static_cast<int>(y), splash->getClip(), &clip_result))
+#endif
     return false;
   return (clip_result != splashClipAllOutside);
 }
