@@ -95,7 +95,7 @@ AS_IF(
   [:],
   [AC_MSG_ERROR([could not parse Poppler version])]
 )
-AC_DEFINE_UNQUOTED([POPPLER_VERSION], [$poppler_version], [Define to the version of Poppler, as integer])
+AC_DEFINE_UNQUOTED([POPPLER_VERSION_NUMBER], [$poppler_version], [Define to the version of Poppler, as integer])
 AC_MSG_CHECKING([for Poppler xpdf headers])
 original_cppflags="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $POPPLER_CFLAGS"

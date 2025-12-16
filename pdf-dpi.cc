@@ -33,7 +33,7 @@ protected:
     this->process_image(state, width, height);
   }
 
-#if POPPLER_VERSION >= 8200
+#if POPPLER_VERSION_NUMBER >= 8200
   virtual void drawImage(pdf::gfx::State *state, pdf::Object *object, pdf::Stream *stream, int width, int height,
     pdf::gfx::ImageColorMap *color_map, bool interpolate, const int *mask_colors, bool inline_image)
 #else

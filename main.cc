@@ -76,13 +76,13 @@ public:
 static int get_page_for_goto_link(pdf::link::GoTo *goto_link, pdf::Catalog *catalog)
 {
   std::unique_ptr<pdf::link::Destination> dest;
-#if POPPLER_VERSION >= 6400
+#if POPPLER_VERSION_NUMBER >= 6400
   const
 #endif
   pdf::link::Destination *orig_dest = goto_link->getDest();
   if (orig_dest == nullptr)
   {
-#if POPPLER_VERSION >= 8600
+#if POPPLER_VERSION_NUMBER >= 8600
     dest = catalog->findDest(goto_link->getNamedDest());
 #else
     dest.reset(catalog->findDest(goto_link->getNamedDest()));
@@ -341,7 +341,7 @@ public:
     return;
   }
 
-#if POPPLER_VERSION >= 8200
+#if POPPLER_VERSION_NUMBER >= 8200
   void drawImage(pdf::gfx::State *state, pdf::Object *object, pdf::Stream *stream, int width, int height,
     pdf::gfx::ImageColorMap *color_map, bool interpolate, const int *mask_colors, bool inline_image)
 #else
@@ -389,7 +389,7 @@ public:
 
   bool interpretType3Chars() { return false; }
 
-#if POPPLER_VERSION >= 8200
+#if POPPLER_VERSION_NUMBER >= 8200
   void drawChar(pdf::gfx::State *state, double x, double y, double dx, double dy, double origin_x, double origin_y,
     CharCode code, int n_bytes, const Unicode *unistr, int length)
 #else
@@ -475,7 +475,7 @@ public:
     switch (link_action->getKind())
     {
     case actionURI:
-#if POPPLER_VERSION >= 8600
+#if POPPLER_VERSION_NUMBER >= 8600
       uri = dynamic_cast<pdf::link::URI*>(link_action)->getURI();
 #else
       uri += pdf::get_c_string(dynamic_cast<pdf::link::URI*>(link_action)->getURI());
@@ -519,17 +519,17 @@ public:
       // L10N: OCG stands for “Optional Content Group” (see PDF Reference v1.7, §4.10.1)
       debug(1) << _("Warning: Unable to convert link with a set-OCG-state action") << std::endl;
       return;
-#if POPPLER_VERSION >= 6400
+#if POPPLER_VERSION_NUMBER >= 6400
     case actionHide:
       debug(1) << _("Warning: Unable to convert link with a hide action") << std::endl;
       return;
 #endif
-#if POPPLER_VERSION >= 8900
+#if POPPLER_VERSION_NUMBER >= 8900
     case actionResetForm:
       debug(1) << _("Warning: Unable to convert link with a reset-form action") << std::endl;
       return;
 #endif
-#if POPPLER_VERSION >= 241000
+#if POPPLER_VERSION_NUMBER >= 241000
     case actionSubmitForm:
       debug(1) << _("Warning: Unable to convert link with a submit-form action") << std::endl;
       return;
@@ -729,7 +729,7 @@ static void pdf_outline_to_djvu_outline(pdf::Object *node, pdf::Catalog *catalog
         std::unique_ptr<pdf::link::Action> link_action;
         if (!pdf::dict_lookup(current, "Dest", &destination)->isNull())
         {
-#if POPPLER_VERSION >= 8600
+#if POPPLER_VERSION_NUMBER >= 8600
           link_action = pdf::link::Action::parseDest(&destination);
 #else
           link_action.reset(pdf::link::Action::parseDest(&destination));
@@ -737,7 +737,7 @@ static void pdf_outline_to_djvu_outline(pdf::Object *node, pdf::Catalog *catalog
         }
         else if (!pdf::dict_lookup(current, "A", &destination)->isNull())
         {
-#if POPPLER_VERSION >= 8600
+#if POPPLER_VERSION_NUMBER >= 8600
           link_action = pdf::link::Action::parseAction(&destination);
 #else
           link_action.reset(pdf::link::Action::parseAction(&destination));

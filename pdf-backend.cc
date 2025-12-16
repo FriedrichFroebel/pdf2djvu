@@ -48,7 +48,7 @@
  * ======================
  */
 
-#if POPPLER_VERSION >= 8500
+#if POPPLER_VERSION_NUMBER >= 8500
 static void poppler_error_handler(ErrorCategory category, pdf::Offset pos, const char *message)
 #else
 static void poppler_error_handler(void *data, ErrorCategory category, pdf::Offset pos, const char *message)
@@ -97,7 +97,7 @@ static void poppler_error_handler(void *data, ErrorCategory category, pdf::Offse
   error_log << std::endl;
 }
 
-#if POPPLER_VERSION < 7000
+#if POPPLER_VERSION_NUMBER < 7000
 static void poppler_error_handler(void *data, ErrorCategory category, pdf::Offset pos, char *message)
 {
   poppler_error_handler(data, category, pos, const_cast<const char *>(message));
@@ -106,12 +106,12 @@ static void poppler_error_handler(void *data, ErrorCategory category, pdf::Offse
 
 pdf::Environment::Environment()
 {
-#if POPPLER_VERSION >= 8300
+#if POPPLER_VERSION_NUMBER >= 8300
   globalParams = std::unique_ptr<GlobalParams>(new GlobalParams);
 #else
   globalParams = new GlobalParams;
 #endif
-#if POPPLER_VERSION >= 8500
+#if POPPLER_VERSION_NUMBER >= 8500
   setErrorCallback(poppler_error_handler);
 #else
   setErrorCallback(poppler_error_handler, nullptr);
@@ -129,7 +129,7 @@ void pdf::Environment::set_antialias(bool value)
  */
 
 pdf::Document::Document(const std::string &file_name)
-#if POPPLER_VERSION >= 220300
+#if POPPLER_VERSION_NUMBER >= 220300
 : ::PDFDoc(std::make_unique<pdf::String>(file_name.c_str()))
 #else
 : ::PDFDoc(new pdf::String(file_name.c_str()))
@@ -181,7 +181,7 @@ static bool annotations_callback(pdf::ant::Annotation *annotation, void *user_da
     border_colors.push_back("");
     return true;
   }
-#if POPPLER_VERSION > 250800
+#if POPPLER_VERSION_NUMBER > 250800
   const double *values = color->getValues().data();
 #else
   const double *values = color->getValues();
@@ -236,7 +236,7 @@ void pdf::Document::get_page_size(int n, bool crop, double &width, double &heigh
 const std::string pdf::Document::get_xmp()
 {
   std::unique_ptr<const pdf::String> mstring;
-#if POPPLER_VERSION >= 211000
+#if POPPLER_VERSION_NUMBER >= 211000
   mstring = this->readMetadata();
 #else
   mstring.reset(this->readMetadata());
@@ -516,13 +516,13 @@ bool pdf::get_glyph(splash::Splash *splash, splash::Font *font,
 void pdf::Renderer::convert_path(pdf::gfx::State *state, splash::Path &splash_path)
 {
   /* Source was copied from <poppler/SplashOutputDev.c>. */
-  // for POPPLER_VERSION >= 8300:
+  // for POPPLER_VERSION_NUMBER >= 8300:
   //   const pdf::gfx::Path *path
   auto path = state->getPath();
   int n_subpaths = path->getNumSubpaths();
   for (int i = 0; i < n_subpaths; i++)
   {
-    // for POPPLER_VERSION >= 8300:
+    // for POPPLER_VERSION_NUMBER >= 8300:
     //   const pdf::gfx::Subpath *subpath
     auto subpath = path->getSubpath(i);
     if (subpath->getNumPoints() > 0)
@@ -631,7 +631,7 @@ namespace pdf
   }
 }
 
-#if POPPLER_VERSION >= 7200
+#if POPPLER_VERSION_NUMBER >= 7200
 const char * pdf::get_c_string(const pdf::String *str)
 {
   return str->c_str();
@@ -645,7 +645,7 @@ const char * pdf::get_c_string(const pdf::String *str)
 
 int pdf::find_page(pdf::Catalog *catalog, pdf::Ref pgref)
 {
-#if POPPLER_VERSION >= 7600
+#if POPPLER_VERSION_NUMBER >= 7600
   return catalog->findPage(pgref);
 #else
   return catalog->findPage(pgref.num, pgref.gen);
