@@ -49,7 +49,7 @@ std::string pdf::string_as_utf8(const pdf::String *string)
      */
     const static uint32_t replacement_character = 0xFFFD;
     const char *cstring = pdf::get_c_string(string);
-#if POPPLER_VERSION > 251000
+#if POPPLER_VERSION_NUMBER > 251000
     size_t clength = string->size();
 #else
     size_t clength = string->getLength();

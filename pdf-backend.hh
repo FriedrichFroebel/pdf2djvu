@@ -236,12 +236,12 @@ namespace pdf
         this->byte_width = width * 3;
         break;
       case splashModeXBGR8:
-#if POPPLER_VERSION >= 8100 || defined(SPLASH_CMYK)
+#if POPPLER_VERSION_NUMBER >= 8100 || defined(SPLASH_CMYK)
       case splashModeCMYK8:
 #endif
         this->byte_width = width * 4;
         break;
-#if POPPLER_VERSION >= 8100 || defined(SPLASH_CMYK)
+#if POPPLER_VERSION_NUMBER >= 8100 || defined(SPLASH_CMYK)
       case splashModeDeviceN8:
 #endif
       default:
@@ -296,7 +296,7 @@ namespace pdf
     const std::string get_xmp();
     void get_doc_info(pdf::Object &info)
     {
-#if POPPLER_VERSION < 5800
+#if POPPLER_VERSION_NUMBER < 5800
       this->getDocInfo(&info);
 #else
       info = this->getDocInfo();
