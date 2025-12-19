@@ -82,7 +82,7 @@ Differences from upstream
 .. _OpenMP:
    https://www.openmp.org/
 .. _poppler-data:
-   https://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz
+   https://poppler.freedesktop.org/poppler-data-0.4.12.tar.gz
 .. _Issue #157:
    https://github.com/jwilk-archive/pdf2djvu/issues/157
 .. _Issue #141:
