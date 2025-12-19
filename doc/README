@@ -60,7 +60,8 @@ Please note that I do not have any direct plans to actually do further work on *
 Differences from upstream
 -------------------------
 
-* Tests require Python ≥ 3.6.
+* Add support for for building against the latest upstream versions of Poppler.
+* Tests require recent Python 3 versions.
 * Migrate tests from *nose* to plain *unittest* stdlib module.
 * Conform tests to PEP8 coding style.
 
