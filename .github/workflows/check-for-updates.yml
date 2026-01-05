@@ -1,0 +1,31 @@
+name: Update checks
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: 0 5 * * 0
+
+env:
+  POPPLER_VERSION: "25.12.0"
+
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    name: Update checks
+    steps:
+    - uses: actions/checkout@v6
+    - name: set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.x"
+    - name: prepare pip
+      run:
+        python -m pip install --upgrade pip wheel
+    - name: install Python deps
+      run:
+        python -m pip install --upgrade beautifulsoup4 lxml pyyaml requests
+    - name: check for Boost updates
+      run:
+        python private/check_for_updates.py
+
