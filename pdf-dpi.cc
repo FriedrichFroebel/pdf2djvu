@@ -91,7 +91,11 @@ public:
 
 void DpiGuessDevice::process_image(pdf::gfx::State *state, int width, int height)
 {
+#if POPPLER_VERSION_NUMBER > 260100
+  const std::array<double, 6> &ctm = state->getCTM();
+#else
   const double *ctm = state->getCTM();
+#endif
   double h_dpi = 72.0 * width / hypot(ctm[0], ctm[1]);
   double v_dpi = 72.0 * height / hypot(ctm[2], ctm[3]);
   this->min_ = std::min(this->min_, std::min(h_dpi, v_dpi));
