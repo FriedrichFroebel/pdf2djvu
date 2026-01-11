@@ -474,7 +474,11 @@ void pdf::set_color(splash::Color &result, uint8_t r, uint8_t g, uint8_t b)
 bool pdf::Environment::antialias = false;
 
 pdf::Renderer::Renderer(pdf::splash::Color &paper_color, bool monochrome)
+#if POPPLER_VERSION_NUMBER > 260100
+: pdf::splash::OutputDevice(monochrome ? splashModeMono1 : splashModeRGB8, 4, paper_color),
+#else
 : pdf::splash::OutputDevice(monochrome ? splashModeMono1 : splashModeRGB8, 4, false, paper_color),
+#endif
   catalog(NULL)
 {
   this->setFontAntialias(pdf::Environment::antialias);
