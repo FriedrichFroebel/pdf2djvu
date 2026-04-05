@@ -110,7 +110,8 @@ std::string pdf::string_as_utf8(const pdf::String *string)
 std::string pdf::string_as_utf8(pdf::Object &object)
 {
 #if POPPLER_VERSION_NUMBER > 260300
-    return pdf::string_as_utf8(pdf::String(object.getString()));
+    pdf::String str = pdf::String(object.getString());
+    return pdf::string_as_utf8(&str);
 #else
     return pdf::string_as_utf8(object.getString());
 #endif
