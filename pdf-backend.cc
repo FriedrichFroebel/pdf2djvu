@@ -411,7 +411,11 @@ pdf::Metadata::Metadata(pdf::Document &document)
     char tzs = 0; int tzh = 0, tzm = 0;
     if (!pdf::dict_lookup(info_dict, field.first, &object)->isString())
       continue;
+#if POPPLER_VERSION_NUMBER > 260300
+    const char *input = object.getString().c_str();
+#else
     const char *input = pdf::get_c_string(object.getString());
+#endif
     if (input[0] == 'D' && input[1] == ':')
       input += 2;
     int year = scan_date_digits(input, 4);
