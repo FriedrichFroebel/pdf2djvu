@@ -542,7 +542,11 @@ void pdf::Renderer::convert_path(pdf::gfx::State *state, splash::Path &splash_pa
     {
       double x1, y1, x2, y2, x3, y3;
       state->transform(subpath->getX(0), subpath->getY(0), &x1, &y1);
+#if POPPLER_VERSION_NUMBER > 260400
+      splash_path.moveTo(x1, y1);
+#else
       splash_path.moveTo(static_cast<splash::Coord>(x1), static_cast<splash::Coord>(y1));
+#endif
       int j = 1;
       int n_points = subpath->getNumPoints();
       while (j < n_points)
@@ -552,17 +556,25 @@ void pdf::Renderer::convert_path(pdf::gfx::State *state, splash::Path &splash_pa
           state->transform(subpath->getX(j), subpath->getY(j), &x1, &y1);
           state->transform(subpath->getX(j + 1), subpath->getY(j + 1), &x2, &y2);
           state->transform(subpath->getX(j + 2), subpath->getY(j + 2), &x3, &y3);
+#if POPPLER_VERSION_NUMBER > 260400
+          splash_path.curveTo(x1, y1, x2, y2, x3, y3);
+#else
           splash_path.curveTo(
             static_cast<splash::Coord>(x1), static_cast<splash::Coord>(y1),
             static_cast<splash::Coord>(x2), static_cast<splash::Coord>(y2),
             static_cast<splash::Coord>(x3), static_cast<splash::Coord>(y3)
           );
+#endif
           j += 3;
         }
         else
         {
           state->transform(subpath->getX(j), subpath->getY(j), &x1, &y1);
+#if POPPLER_VERSION_NUMBER > 260400
+          splash_path.lineTo(x1, y1);
+#else
           splash_path.lineTo(static_cast<splash::Coord>(x1), static_cast<splash::Coord>(y1));
+#endif
           j++;
         }
       }

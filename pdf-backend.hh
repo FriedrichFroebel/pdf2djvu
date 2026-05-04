@@ -63,7 +63,9 @@ namespace pdf
     typedef ::Splash Splash;
     typedef ::SplashColor Color;
     typedef ::SplashFont Font;
+#if POPPLER_VERSION_NUMBER < 260500
     typedef ::SplashCoord Coord;
+#endif
     typedef ::SplashPath Path;
     typedef ::SplashGlyphBitmap GlyphBitmap;
     typedef ::SplashBitmap Bitmap;
