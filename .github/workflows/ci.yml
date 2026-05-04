@@ -5,6 +5,12 @@ on:
 - pull_request
 - workflow_dispatch
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
 jobs:
   main:
     strategy:
@@ -39,11 +45,14 @@ jobs:
           exiv2: exiv2-git
           os: ubuntu-latest
           cc: clang
-    runs-on: ${{matrix.os}}
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.poppler }} and {{ matrix.evix2 }}
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      with:
+        persist-credentials: false
     - name: set up ccache
-      uses: actions/cache@v5
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae  # v5.0.5
       with:
         path: ~/.ccache
         key: ccache-${{matrix.os}}-${{matrix.cc || 'gcc'}}-${{matrix.poppler}}-${{matrix.exiv2}}
@@ -79,15 +88,18 @@ jobs:
           xsltproc
     - name: set up C++ compiler
       run: |
-        CC=${{matrix.cc || 'gcc'}}
-        echo CC=$CC >> $GITHUB_ENV
-        CXX=${{(matrix.cc && format('{0}++', matrix.cc)) || 'g++'}}
-        echo CXX=$CXX >> $GITHUB_ENV
+        echo CC=${CC} >> $GITHUB_ENV
+        echo CXX=${CXX} >> $GITHUB_ENV
+      env:
+        CC: ${{matrix.cc || 'gcc'}}
+        CXX: ${{(matrix.cc && format('{0}++', matrix.cc)) || 'g++'}}
     - name: download and unpack Poppler source tarball
       run: |
-        wget https://poppler.freedesktop.org/${{ matrix.poppler }}.tar.xz
+        wget "https://poppler.freedesktop.org/${POPPLER}.tar.xz"
         tar -xvvf poppler-*.tar.*
       if: matrix.poppler != 'poppler-git'
+      env:
+        POPPLER: ${{ matrix.poppler }}
     - name: download Poppler git repo
       run: |
         wget https://gitlab.freedesktop.org/poppler/poppler/-/archive/master/poppler-master.tar.gz -O poppler-master.tar.gz
@@ -117,9 +129,11 @@ jobs:
         rm -rf poppler-*
     - name: download and unpack poppler-data source tarball
       run: |
-        wget https://poppler.freedesktop.org/${{ matrix.poppler-data }}.tar.gz
+        wget "https://poppler.freedesktop.org/${POPPLER_DATA}.tar.gz"
         tar -xvvf poppler-data-*.tar.*
       if: matrix.poppler-data != 'poppler-data-git'
+      env:
+        POPPLER_DATA: ${{ matrix.poppler-data }}
     - name: download poppler-data git repo
       run: |
         wget https://gitlab.freedesktop.org/poppler/poppler-data/-/archive/master/poppler-data-master.tar.gz -O poppler-data-master.tar.gz
@@ -134,11 +148,13 @@ jobs:
         rm -rf poppler-data-*
     - name: download and unpack Exiv2 source tarball
       run: |
-        v=${{ matrix.exiv2 }}
+        v=${EXIV2}
         v=${v#exiv2-}
         wget -O "exiv2-v${v}.tar.gz" "https://github.com/Exiv2/exiv2/archive/refs/tags/v${v}.tar.gz"
         tar -xvvf exiv2-*.tar.*
       if: matrix.exiv2 != 'exiv2-git'
+      env:
+        EXIV2: ${{ matrix.exiv2 }}
     - name: download and unpack Exiv2 git
       run: |
         wget https://github.com/Exiv2/exiv2/archive/refs/heads/main.tar.gz -O exiv2-main.tar.gz
@@ -174,7 +190,7 @@ jobs:
       run:
         ./pdf2djvu --version
     - name: set up Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
       with:
         python-version: '3.x'
     - name: update PIP
@@ -217,8 +233,11 @@ jobs:
       if: matrix.docs
   cppcheck:
     runs-on: ubuntu-latest
+    name: cppcheck
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      with:
+        persist-credentials: false
     - name: set up APT
       run:
         sudo apt-get update
@@ -230,10 +249,13 @@ jobs:
         private/cppcheck
   Python:
     runs-on: ubuntu-latest
+    name: Python
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+      with:
+        persist-credentials: false
     - name: set up Python
-      uses: actions/setup-python@v6
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405  # v6.2.0
       with:
         python-version: '3.x'
     - name: install flake8
