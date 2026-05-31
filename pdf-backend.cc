@@ -163,7 +163,11 @@ static void cmyk_to_rgb(const double cmyk[], double rgb[])
   pdf::gfx::RgbColor rgb_cc;
   for (int i = 0; i < 4; i++)
     cmyk_cc.c[i] = pdf::gfx::double_as_color_component(cmyk[i]);
+#if POPPLER_VERSION_NUMBER > 260500
+  cmyk_space.getRGB(cmyk_cc, &rgb_cc);
+#else
   cmyk_space.getRGB(&cmyk_cc, &rgb_cc);
+#endif
   rgb[0] = pdf::gfx::color_component_as_double(rgb_cc.r);
   rgb[1] = pdf::gfx::color_component_as_double(rgb_cc.g);
   rgb[2] = pdf::gfx::color_component_as_double(rgb_cc.b);
