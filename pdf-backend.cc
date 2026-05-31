@@ -179,7 +179,11 @@ static bool annotations_callback(pdf::ant::Annotation *annotation, void *user_da
   std::string border_color;
   if (annotation->getType() != pdf::ant::Annotation::typeLink)
     return true;
+#if POPPLER_VERSION_NUMBER > 260500
+  const pdf::ant::Color *color = annotation->getColor();
+#else
   pdf::ant::Color *color = annotation->getColor();
+#endif
   if (color == nullptr)
   {
     border_colors.push_back("");
