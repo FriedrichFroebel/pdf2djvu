@@ -57,7 +57,7 @@ std::string pdf::string_as_utf8(const std::string &s)
     return string_as_utf8_implementation(s.data(), s.size());
 }
 
-std::string string_as_utf8_implementation(const char *cstring, size_t clength)
+static std::string string_as_utf8_implementation(const char *cstring, size_t clength)
 {
     /* See
      * https://unicode.org/faq/utf_bom.html
