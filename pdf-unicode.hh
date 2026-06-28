@@ -34,7 +34,6 @@ namespace pdf
     std::string string_as_utf8(const pdf::String *);
     std::string string_as_utf8(const std::string &);
     std::string string_as_utf8(pdf::Object &);
-    std::string string_as_utf8(std::string *);
 
 /* class pdf::NFKC
  * ===============
