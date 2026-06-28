@@ -49,15 +49,15 @@ std::string pdf::string_as_utf8(const pdf::String *string)
 #else
     size_t clength = string->getLength();
 #endif
-    return pdf::string_as_utf8_implementation(cstring, clength);
+    return string_as_utf8_implementation(cstring, clength);
 }
 
 std::string pdf::string_as_utf8(const std::string &s)
 {
-    return pdf::string_as_utf8_implementation(s.data(), s.size());
+    return string_as_utf8_implementation(s.data(), s.size());
 }
 
-std::string pdf::string_as_utf8_implementation(const char *cstring, size_t clength)
+std::string string_as_utf8_implementation(const char *cstring, size_t clength)
 {
     /* See
      * https://unicode.org/faq/utf_bom.html
