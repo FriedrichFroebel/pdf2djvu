@@ -77,6 +77,8 @@ class IpcResult:
         self.rc = rc
 
     def check_result(self, testcase_object: _TestCase, stdout=None, stderr=None, rc=0):
+        print(self.stdout)
+        print(self.stderr)
         if stderr is None:
             pass
         elif isinstance(stderr, RE_TYPE):
