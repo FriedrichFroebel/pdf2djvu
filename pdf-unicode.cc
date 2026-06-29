@@ -41,22 +41,6 @@ void pdf::write_as_utf8(std::ostream &stream, Unicode unicode_char)
     stream.write(buffer, seqlen);
 }
 
-std::string pdf::string_as_utf8(const pdf::String *string)
-{
-    const char *cstring = pdf::get_c_string(string);
-#if POPPLER_VERSION_NUMBER > 251000
-    size_t clength = string->size();
-#else
-    size_t clength = string->getLength();
-#endif
-    return string_as_utf8_implementation(cstring, clength);
-}
-
-std::string pdf::string_as_utf8(const std::string &s)
-{
-    return string_as_utf8_implementation(s.data(), s.size());
-}
-
 static std::string string_as_utf8_implementation(const char *cstring, size_t clength)
 {
     /* See
@@ -112,9 +96,25 @@ static std::string string_as_utf8_implementation(const char *cstring, size_t cle
     } else {
         /* PDFDoc encoding */
         for (size_t i = 0; i < clength; i++)
-            write_as_utf8(stream, pdfDocEncoding[cstring[i] & 0xFF]);
+            pdf::write_as_utf8(stream, pdfDocEncoding[cstring[i] & 0xFF]);
     }
     return stream.str();
+}
+
+std::string pdf::string_as_utf8(const pdf::String *string)
+{
+    const char *cstring = pdf::get_c_string(string);
+#if POPPLER_VERSION_NUMBER > 251000
+    size_t clength = string->size();
+#else
+    size_t clength = string->getLength();
+#endif
+    return string_as_utf8_implementation(cstring, clength);
+}
+
+std::string pdf::string_as_utf8(const std::string &s)
+{
+    return string_as_utf8_implementation(s.data(), s.size());
 }
 
 std::string pdf::string_as_utf8(pdf::Object &object)
