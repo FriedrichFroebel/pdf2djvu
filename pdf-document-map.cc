@@ -43,11 +43,13 @@ pdf::DocumentMap::DocumentMap(const std::vector<const char *> &paths)
             for (int i = 0; i < doc->getNumPages(); i++) {
 #if POPPLER_VERSION_NUMBER > 260600
                 std::string s;
+                if (catalog->indexToLabel(i, &s)) {
+                    std::string str = pdf::string_as_utf8(s);
 #else
                 pdf::String s;
-#endif
                 if (catalog->indexToLabel(i, &s)) {
                     std::string str = pdf::string_as_utf8(&s);
+#endif
                     this->labels.push_back(str);
                 }
                 else
