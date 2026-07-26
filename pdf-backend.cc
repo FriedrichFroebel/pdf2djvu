@@ -243,15 +243,23 @@ void pdf::Document::get_page_size(int n, bool crop, double &width, double &heigh
 
 const std::string pdf::Document::get_xmp()
 {
-  std::unique_ptr<const pdf::String> mstring;
-#if POPPLER_VERSION_NUMBER >= 211000
-  mstring = this->readMetadata();
+  const char *cstring = nullptr;
+#if POPPLER_VERSION_NUMBER > 260700
+  std::optional<std::string> mstring = this->readMetadata();
+  if (!mstring)
+    return "";
+  cstring = mstring->c_str();
 #else
+  std::unique_ptr<const pdf::String> mstring;
+#  if POPPLER_VERSION_NUMBER >= 211000
+  mstring = this->readMetadata();
+#  else
   mstring.reset(this->readMetadata());
-#endif
+#  endif
   if (mstring.get() == nullptr)
     return "";
-  const char *cstring = pdf::get_c_string(mstring.get());
+  cstring = pdf::get_c_string(mstring.get());
+#endif
   if (strncmp(cstring, "<?xpacket begin=", 16) != 0)
     return "";
   cstring += 16;
