@@ -12,7 +12,7 @@ concurrency:
 permissions: {}
 
 env:
-  POPPLER_VERSION: "26.07.0"
+  POPPLER_VERSION: "26.08.0"
 
 
 jobs:
