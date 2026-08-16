@@ -27,7 +27,9 @@ URL = "https://gitlab.freedesktop.org/poppler/poppler/-/tags?format=atom"
 
 
 def fetch_latest_poppler_release():
-    soup = BeautifulSoup(requests.get(URL).content, features="xml")
+    response = requests.get(URL)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.content, features="xml")
     entry = soup.find("entry")
     version = entry.find("title").text
 
