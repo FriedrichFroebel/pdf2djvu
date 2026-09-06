@@ -147,25 +147,25 @@ then
     # is not part of official releases created after this change.
     AC_MSG_CHECKING([whether Exiv2 XmpParser::decode() takes DecodeParams])
     AC_COMPILE_IFELSE(
-        [AC_LANG_PROGRAM(
-            [[
-              #include <string>
-              #include <exiv2/exiv2.hpp>
-            ]],
-            [[
-              Exiv2::XmpData data;
-              Exiv2::DecodeParams dp;
-              Exiv2::XmpParser::decode(data, std::string(), dp);
-            ]]
-        )],
-        [
-          AC_MSG_RESULT([yes])
-          AC_DEFINE(
-            [HAVE_EXIV2_XMP_DECODE_PARAMS], 1,
-            [Define if Exiv2 XmpParser::decode() takes DecodeParams]
-          )
-        ],
-        [AC_MSG_RESULT([no])]
+      [AC_LANG_PROGRAM(
+        [[
+          #include <string>
+          #include <exiv2/exiv2.hpp>
+        ]],
+        [[
+          Exiv2::XmpData data;
+          Exiv2::XmpParser::decode(
+            data, std::string(), Exiv2::DecodeParams(500));
+        ]]
+      )],
+      [
+        AC_MSG_RESULT([yes])
+        AC_DEFINE(
+          [HAVE_EXIV2_XMP_DECODE_PARAMS], 1,
+          [Define if Exiv2 XmpParser::decode() takes DecodeParams]
+        )
+      ],
+      [AC_MSG_RESULT([no])]
     )
 
     if test ! "$have_uuid"

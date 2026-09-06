@@ -78,7 +78,8 @@ std::string xmp::transform(const std::string &ibytes, const pdf::Metadata &metad
     Exiv2::XmpData data;
     int rc;
 #if HAVE_EXIV2_XMP_DECODE_PARAMS
-    Exiv2::DecodeParams dp;
+    // The limit is from the Exiv2 tests (`MAX_RECURSION_DEPTH`).
+    Exiv2::DecodeParams dp(500);
     rc = Exiv2::XmpParser::decode(data, ibytes, dp);
 #else
     rc = Exiv2::XmpParser::decode(data, ibytes);
