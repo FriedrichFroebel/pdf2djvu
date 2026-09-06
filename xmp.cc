@@ -77,7 +77,12 @@ std::string xmp::transform(const std::string &ibytes, const pdf::Metadata &metad
     Exiv2::LogMsg::setHandler(error_handler);
     Exiv2::XmpData data;
     int rc;
+#if HAVE_EXIV2_XMP_DECODE_PARAMS
+    Exiv2::DecodeParams dp;
+    rc = Exiv2::XmpParser::decode(data, ibytes, dp);
+#else
     rc = Exiv2::XmpParser::decode(data, ibytes);
+#endif
     if (rc != 0)
         throw xmp::Error(_("Unable to parse XMP metadata"));
     std::string instance_id = gen_uuid();
