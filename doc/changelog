@@ -1,3 +1,13 @@
+pdf2djvu (0.10.0) unstable; urgency=low
+
+  [ FriedrichFroebel ]
+  * Port tests to recent Python 3.
+  * Ensure compatibility with Poppler up to 26.10.0.
+    More recent versions might work, but are not guaranteed to work.
+  * Ensure compatibility with latest Exiv2 code.
+
+ -- FriedrichFroebel <>  Mon, 19 Oct 2026 20:15:00 +0200
+
 pdf2djvu (0.9.19) unstable; urgency=low
 
   [ Jakub Wilk ]

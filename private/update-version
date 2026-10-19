@@ -20,7 +20,7 @@ po_files=$(ls po/*.po po/*.pot 2>/dev/null || true)
 doc_po_files=$(ls doc/po/*.po doc/po/*.pot 2>/dev/null || true)
 PS4='$ '
 set -x
-dch -m -v "$version" -u low -c doc/changelog
+# dch -m -v "$version" -u low -c doc/changelog
 export version windows_version
 perl -pi -e 's/^AC_INIT[(]\[\S+\], \[\K[0-9.]+/$ENV{version}/' configure.ac
 perl -pi -e 's/VERSION \K[0-9,]+/$ENV{windows_version}/' win32-version.rc
