@@ -33,12 +33,13 @@ class VersionTestCase(TestCase):
 
     def test_manpage(self):
         path = os.path.join(SRC_DIR, 'doc', 'manpage.xml')
-        for dummy_event, elem in ElementTree.iterparse(path):
-            if elem.tag == 'refmiscinfo' and elem.get('class') == 'version':
-                self.assertEqual(elem.text, self.changelog_version)
-                break
-        else:
-            self.fail("missing <refmiscinfo class='version'>")
+        with open(path, 'rb') as source:
+            for dummy_event, elem in ElementTree.iterparse(source):
+                if elem.tag == 'refmiscinfo' and elem.get('class') == 'version':
+                    self.assertEqual(elem.text, self.changelog_version)
+                    break
+            else:
+                self.fail("missing <refmiscinfo class='version'>")
 
     def test_executable(self):
         r = self.pdf2djvu('--version')
